@@ -1,4 +1,7 @@
 ﻿@page "/counter"
+@using MediatR
+@using OnlineShop.Domain.Customers.Commands
+@inject IMediator _mediator
 
 <PageTitle>Counter</PageTitle>
 
@@ -6,7 +9,9 @@
 
 <p role="status">Current count: @currentCount</p>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<button class="btn btn-primary" @onclick="IncrementCount">Create</button>
+<button class="btn btn-primary" @onclick="IncrementCount">Update</button>
+<button class="btn btn-primary" @onclick="IncrementCount">Delete</button>
 
 @code {
     private int currentCount = 0;
@@ -14,5 +19,23 @@
     private void IncrementCount()
     {
         currentCount++;
+    }
+
+    private async Task Test()
+    {
+        var createCommand = new CreateCustomerCommand
+        {
+            NameStyle = 0, 
+            Title = "test", 
+            FirstName = "test", 
+            MiddleName = "test", 
+            LastName = "testff",
+            Suffix = "suff",
+            CompanyName = "Dummy",
+            SalesPerson = "|f", 
+            EmailAddress = "stupid.email.com", 
+            Phone = "5552234", 
+            Password = "few"
+        };
     }
 }

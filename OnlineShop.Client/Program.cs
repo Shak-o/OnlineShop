@@ -1,4 +1,11 @@
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using OnlineShop.App;
 using OnlineShop.Client.Data;
+using OnlineShop.Domain.Customers;
+using OnlineShop.Persistence;
+using OnlineShop.Persistence.Interfaces;
+using OnlineShop.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +13,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+
+builder.Services.AddMediatR(typeof(Ref).Assembly);
+builder.Services.AddScoped<IRepository<Customer>, BaseRepository<Customer>>();
+builder.Services.AddDbContext<ShopDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("")));
+builder.Services.AddSingleton<DbContext, ShopDbContext>();
 
 var app = builder.Build();
 

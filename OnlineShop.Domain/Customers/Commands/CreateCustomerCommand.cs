@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MediatR;
 
 namespace OnlineShop.Domain.Customers.Commands
 {
-    public class CreateCustomerCommand
+    public class CreateCustomerCommand : IRequest
     {
         public int NameStyle { get; set; }
         public string? Title { get; set; }

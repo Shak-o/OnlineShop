@@ -1,10 +1,9 @@
-﻿using System.Linq.Expressions;
-using OnlineShop.Domain.Customers;
-using OnlineShop.Domain.Customers.Commands;
+﻿using OnlineShop.Domain;
+using System.Linq.Expressions;
 
 namespace OnlineShop.Persistence.Interfaces
 {
-    public interface IRepository<T> where T : class
+    public interface IRepository<T> where T : BaseModel
     {
         Task<T> GetFirstAsync(Expression<Func<T, bool>> filter, string[] includes, CancellationToken cancellationToken);
         Task AddAsync(T obj, CancellationToken cancellationToken);

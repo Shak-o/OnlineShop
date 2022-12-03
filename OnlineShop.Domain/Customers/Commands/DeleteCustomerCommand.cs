@@ -1,6 +1,8 @@
-﻿namespace OnlineShop.Domain.Customers.Commands
+﻿using MediatR;
+
+namespace OnlineShop.Domain.Customers.Commands
 {
-    public class DeleteCustomerCommand
+    public class DeleteCustomerCommand : IRequest
     {
         public int Id { get; set; }
     }

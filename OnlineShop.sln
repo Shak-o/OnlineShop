@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineShop.Client", "OnlineShop.Client\OnlineShop.Client.csproj", "{DB445212-E051-4CCD-82EB-62AABCAB909A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineShop.Client", "OnlineShop.Client\OnlineShop.Client.csproj", "{DB445212-E051-4CCD-82EB-62AABCAB909A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{69760795-1294-4A9B-A9CD-6023E13CF0C2}"
 EndProject
@@ -11,11 +11,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{5C7C0BFF-FE8E-4D3E-BD5D-7455F30B8D9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineShop.Persistence", "OnlineShop.Persistence\OnlineShop.Persistence.csproj", "{2AF17E36-416C-4F7B-854A-818DBB58D33D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineShop.Persistence", "OnlineShop.Persistence\OnlineShop.Persistence.csproj", "{2AF17E36-416C-4F7B-854A-818DBB58D33D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineShop.Domain", "OnlineShop.Domain\OnlineShop.Domain.csproj", "{DD5CFEAE-212A-4BF8-B02C-2766756258C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineShop.Domain", "OnlineShop.Domain\OnlineShop.Domain.csproj", "{DD5CFEAE-212A-4BF8-B02C-2766756258C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineShop.App", "OnlineShop.App\OnlineShop.App.csproj", "{0476FDF6-066D-4D35-8D08-AB0278B23403}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineShop.App", "OnlineShop.App\OnlineShop.App.csproj", "{0476FDF6-066D-4D35-8D08-AB0278B23403}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

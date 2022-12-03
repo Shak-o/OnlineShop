@@ -1,8 +1,7 @@
 ﻿namespace OnlineShop.Domain.Customers
 {
-    public class Customer
+    public class Customer : BaseModel
     {
-        public int Id { get; set; }
         public int NameStyle { get; set; }
         public string? Title { get; set; }
         public string? FirstName { get; set; }
