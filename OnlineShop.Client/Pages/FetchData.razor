@@ -1,0 +1,49 @@
+﻿@page "/fetchdata"
+
+<PageTitle>Weather forecast</PageTitle>
+
+@using OnlineShop.Client.Data
+@inject WeatherForecastService ForecastService
+
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from a service.</p>
+
+@if (_forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in _forecasts)
+            {
+                <tr>
+                    <td contenteditable="true">@forecast.Date.ToShortDateString()</td>
+                    <td contenteditable="true">@forecast.TemperatureC</td>
+                    <td contenteditable="true"> @forecast.TemperatureF</td>
+                    <td contenteditable="true">@forecast.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private WeatherForecast[]? _forecasts = Array.Empty<WeatherForecast>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _forecasts = ForecastService.GetForecastAsync(DateTime.Now);
+    }
+
+}
