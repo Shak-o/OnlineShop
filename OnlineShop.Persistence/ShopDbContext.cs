@@ -19,6 +19,11 @@ namespace OnlineShop.Persistence
             
         }
 
+        protected override void OnModelCreating(ModelBuilder modelbuilder)
+        {
+            modelbuilder.ApplyConfigurationsFromAssembly(typeof(ShopDbContext).Assembly);
+        }
+
         public DbSet<Customer> Customers { get; set; }
 
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken)

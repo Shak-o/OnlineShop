@@ -1,6 +1,8 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using OnlineShop.App;
+using OnlineShop.App.Extensions;
+using OnlineShop.App.Mapping;
 using OnlineShop.Client.Data;
 using OnlineShop.Domain.Customers;
 using OnlineShop.Persistence;
@@ -16,8 +18,9 @@ builder.Services.AddSingleton<WeatherForecastService>();
 
 builder.Services.AddMediatR(typeof(Ref).Assembly);
 builder.Services.AddScoped<IRepository<Customer>, BaseRepository<Customer>>();
-builder.Services.AddDbContext<ShopDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("")));
-builder.Services.AddSingleton<DbContext, ShopDbContext>();
+builder.Services.AddDbContext<ShopDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<DbContext, ShopDbContext>();
+builder.Services.AddAutoMapper(typeof(AutoMapperConfiguration));
 
 var app = builder.Build();
 

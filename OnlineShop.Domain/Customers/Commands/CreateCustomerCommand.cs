@@ -9,7 +9,7 @@ namespace OnlineShop.Domain.Customers.Commands
 {
     public class CreateCustomerCommand : IRequest
     {
-        public int NameStyle { get; set; }
+        public bool NameStyle { get; set; }
         public string? Title { get; set; }
         public string? FirstName { get; set; }
         public string? MiddleName { get; set; }
@@ -19,7 +19,7 @@ namespace OnlineShop.Domain.Customers.Commands
         public string? SalesPerson { get; set; }
         public string? EmailAddress { get; set; }
         public string? Phone { get; set; }
-        public string? Password { get; set; }
+        public string Password { get; set; }
         
         #region Constructors
         public CreateCustomerCommand()
@@ -27,7 +27,7 @@ namespace OnlineShop.Domain.Customers.Commands
             
         }
 
-        public CreateCustomerCommand(int nameStyle, string? title, string firstName, string? middleName, string lastName, string? suffix, string companyName, string salesPerson, string emailAddress, string phone, string password)
+        public CreateCustomerCommand(bool nameStyle, string? title, string firstName, string? middleName, string lastName, string? suffix, string companyName, string salesPerson, string emailAddress, string phone, string password)
         {
             NameStyle = nameStyle;
             Title = title;

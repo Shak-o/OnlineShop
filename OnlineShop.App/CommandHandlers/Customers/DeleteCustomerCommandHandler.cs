@@ -3,7 +3,7 @@ using OnlineShop.Domain.Customers;
 using OnlineShop.Domain.Customers.Commands;
 using OnlineShop.Persistence.Interfaces;
 
-namespace OnlineShop.App.CommandHandlers
+namespace OnlineShop.App.CommandHandlers.Customers
 {
     public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerCommand>
     {

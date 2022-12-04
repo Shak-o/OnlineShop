@@ -3,6 +3,7 @@ using OnlineShop.Persistence.Interfaces;
 using System.Linq.Expressions;
 using AutoMapper;
 using OnlineShop.Domain;
+using OnlineShop.Domain.Customers;
 
 namespace OnlineShop.Persistence.Repositories
 {
@@ -11,9 +12,10 @@ namespace OnlineShop.Persistence.Repositories
         private readonly DbSet<T> _table;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        
+        private readonly ShopDbContext _test;
         public BaseRepository(ShopDbContext context, IMapper mapper)
         {
+            _test = context;
             _table = context.Set<T>();
             _unitOfWork = context;
             _mapper = mapper;
@@ -23,6 +25,13 @@ namespace OnlineShop.Persistence.Repositories
         {
             var toreTurn = _table.Include(includes[0]).Where(filter);
             return await toreTurn.FirstAsync(cancellationToken);
+        }
+
+        public IQueryable<T> GetAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, string[]? includes = null )
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            
+            return _table.Where(filter);
         }
 
         public async Task AddAsync(T obj, CancellationToken cancellationToken)
@@ -43,13 +52,13 @@ namespace OnlineShop.Persistence.Repositories
         {
             try
             {
-                var check = await _table.FirstOrDefaultAsync(x => x.Id == obj.Id, cancellationToken);
+                var check = await _table.AsNoTracking().FirstOrDefaultAsync(x => x.Id == obj.Id, cancellationToken);
 
                 if (check is null)
                     throw new Exception("Error during updating entity");
 
-                check = _mapper.Map(obj, check);
-
+                check = _mapper.Map(check, obj);
+                
                 _table.Update(check);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
 

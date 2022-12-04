@@ -5,7 +5,7 @@ using OnlineShop.Domain.Customers;
 using OnlineShop.Domain.Customers.Commands;
 using OnlineShop.Persistence.Interfaces;
 
-namespace OnlineShop.App.CommandHandlers
+namespace OnlineShop.App.CommandHandlers.Customers
 {
     public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand>
     {
@@ -20,16 +20,24 @@ namespace OnlineShop.App.CommandHandlers
 
         public async Task<Unit> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
-            var mapped = _mapper.Map<Customer>(request);
+            try
+            {
+                var mapped = _mapper.Map<Customer>(request);
 
-            var saltAndPass = HashHelper.CreateHashWithSalt();
-            
-            mapped.PasswordHash = saltAndPass.Item1;
-            mapped.PasswordSalt = saltAndPass.Item2;
+                var saltAndPass = HashHelper.CreateHashWithSalt(request.Password);
 
-            await _repository.AddAsync(mapped, cancellationToken);
+                mapped.PasswordHash = saltAndPass.Item1!;
+                mapped.PasswordSalt = saltAndPass.Item2;
+                mapped.RowGuid = Guid.NewGuid();
 
-            return Unit.Value;
+                await _repository.AddAsync(mapped, cancellationToken);
+
+                return Unit.Value;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error during creation of customer:{ex.Message}");
+            }
         }
     }
 }

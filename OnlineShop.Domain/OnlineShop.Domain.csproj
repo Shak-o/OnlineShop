@@ -7,10 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Addresses\Commands\" />
     <Folder Include="Customers\Validators\" />
+    <Folder Include="ProductCategories\Commands\" />
     <Folder Include="SalesOrderHeaders\" />
-    <Folder Include="ProductCategories\" />
     <Folder Include="Products\" />
   </ItemGroup>
 

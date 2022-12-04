@@ -9,8 +9,8 @@
 
 <p role="status">Current count: @currentCount</p>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Create</button>
-<button class="btn btn-primary" @onclick="IncrementCount">Update</button>
+<button class="btn btn-primary" @onclick="Create">Create</button>
+<button class="btn btn-primary" @onclick="Update">Update</button>
 <button class="btn btn-primary" @onclick="IncrementCount">Delete</button>
 
 @code {
@@ -21,11 +21,11 @@
         currentCount++;
     }
 
-    private async Task Test()
+    private async Task Create()
     {
         var createCommand = new CreateCustomerCommand
         {
-            NameStyle = 0, 
+            NameStyle = false, 
             Title = "test", 
             FirstName = "test", 
             MiddleName = "test", 
@@ -37,5 +37,28 @@
             Phone = "5552234", 
             Password = "few"
         };
+
+        await _mediator.Send(createCommand);
+    }
+
+    private async Task Update()
+    {
+        var updateCustomerCommand = new UpdateCustomerCommand()
+        {
+            Id = 30123,
+            NameStyle = false,
+            Title = "test_up",
+            FirstName = "test_up",
+            MiddleName = "test_up",
+            LastName = "testff_up",
+            Suffix = "suff_up",
+            CompanyName = "Dummy",
+            SalesPerson = "|f",
+            EmailAddress = "stupid.email.com",
+            Phone = "5552234",
+            Password = "NewPass"
+        };
+
+        await _mediator.Send(updateCustomerCommand);
     }
 }

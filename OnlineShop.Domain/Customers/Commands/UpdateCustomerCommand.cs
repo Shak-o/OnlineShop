@@ -10,7 +10,7 @@ namespace OnlineShop.Domain.Customers.Commands
     public class UpdateCustomerCommand : IRequest
     {
         public int Id { get; set; }
-        public int NameStyle { get; set; }
+        public bool NameStyle { get; set; }
         public string? Title { get; set; }
         public string? FirstName { get; set; }
         public string? MiddleName { get; set; }

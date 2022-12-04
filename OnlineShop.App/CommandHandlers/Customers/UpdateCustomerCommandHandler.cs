@@ -4,7 +4,7 @@ using OnlineShop.Domain.Customers;
 using OnlineShop.Domain.Customers.Commands;
 using OnlineShop.Persistence.Interfaces;
 
-namespace OnlineShop.App.CommandHandlers
+namespace OnlineShop.App.CommandHandlers.Customers
 {
     public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerCommand>
     {
@@ -16,7 +16,7 @@ namespace OnlineShop.App.CommandHandlers
             _repository = repository;
             _mapper = mapper;
         }
-        
+
         public async Task<Unit> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
         {
             var converted = _mapper.Map<Customer>(request);
