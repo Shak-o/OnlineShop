@@ -10,5 +10,6 @@ namespace OnlineShop.App.Extensions
             
             return service;
         }
+
     }
 }

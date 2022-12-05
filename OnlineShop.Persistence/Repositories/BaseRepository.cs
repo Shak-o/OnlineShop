@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using OnlineShop.Domain;
 using OnlineShop.Persistence.Interfaces;
 using System.Linq.Expressions;
-using AutoMapper;
-using OnlineShop.Domain;
-using OnlineShop.Domain.Customers;
+using OnlineShop.Persistence.Helpers;
 
 namespace OnlineShop.Persistence.Repositories
 {
@@ -21,16 +21,16 @@ namespace OnlineShop.Persistence.Repositories
             _mapper = mapper;
         }
 
-        public async Task<T> GetFirstAsync(Expression<Func<T, bool>> filter, string[] includes , CancellationToken cancellationToken)
+        public async Task<T> GetFirstAsync(Expression<Func<T, bool>> filter, string[] includes, CancellationToken cancellationToken)
         {
             var toreTurn = _table.Include(includes[0]).Where(filter);
             return await toreTurn.FirstAsync(cancellationToken);
         }
 
-        public IQueryable<T> GetAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, string[]? includes = null )
+        public IQueryable<T> GetAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, string[]? includes = null)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            
+
             return _table.Where(filter);
         }
 
@@ -45,7 +45,7 @@ namespace OnlineShop.Persistence.Repositories
             {
                 throw new Exception($"Error during saving object {nameof(T)}. Exception: {ex.Message}");
             }
-            
+
         }
 
         public async Task UpdateAsync(T obj, CancellationToken cancellationToken)
@@ -57,8 +57,8 @@ namespace OnlineShop.Persistence.Repositories
                 if (check is null)
                     throw new Exception("Error during updating entity");
 
-                check = _mapper.Map(check, obj);
-                
+                check = ComparisonHelper.MapDiff(check, obj);
+
                 _table.Update(check);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -68,6 +68,7 @@ namespace OnlineShop.Persistence.Repositories
                 throw new Exception($"Error during update, Id:{obj.Id} Error: {ex.Message}");
             }
         }
+
         public async Task DeleteAsync(int id, CancellationToken cancellationToken)
         {
             try
