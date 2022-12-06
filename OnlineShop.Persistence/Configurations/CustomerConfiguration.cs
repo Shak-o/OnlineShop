@@ -8,13 +8,14 @@ namespace OnlineShop.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Customer> builder)
         {
-            builder.ToTable("Customer", "SalesLT");
+            builder.Property(x => x.ModifiedDate)
+                .HasDefaultValueSql("getdate()")
+                .ValueGeneratedOnAddOrUpdate()
+                .HasComment("Date and time the record was last updated.")
+                .HasColumnType("datetime");
 
-            builder.HasKey(x => x.Id);
-
-            builder.Property(x => x.Id).HasColumnName("CustomerId");
-            builder.Property(x => x.ModifiedDate).HasDefaultValueSql("GETDATE()");
-            builder.Property(x => x.RowGuid).HasColumnName("rowGuid");
+            builder.Property(x => x.PasswordHash).HasMaxLength(300);
+            builder.Property(x => x.PasswordSalt).HasMaxLength(150);
         }
     }
 }

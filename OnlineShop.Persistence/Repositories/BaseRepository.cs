@@ -53,11 +53,15 @@ namespace OnlineShop.Persistence.Repositories
             try
             {
                 var check = await _table.AsNoTracking().FirstOrDefaultAsync(x => x.Id == obj.Id, cancellationToken);
+                var prop = check.GetType().GetProperty("Rowguid");
+                var rowGuid = prop.GetValue(check);
 
                 if (check is null)
                     throw new Exception("Error during updating entity");
 
-                check = ComparisonHelper.MapDiff(check, obj);
+                check = _mapper.Map(obj, check);
+                
+                prop.SetValue(check, rowGuid);
 
                 _table.Update(check);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);

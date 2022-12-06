@@ -1,39 +1,67 @@
-﻿using System.Data;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using OnlineShop.Domain.Customers;
+using OnlineShop.Domain.Models;
+using OnlineShop.Persistence.Helpers;
 using OnlineShop.Persistence.Interfaces;
 
-namespace OnlineShop.Persistence
+namespace OnlineShop.Persistence;
+
+public partial class ShopDbContext : DbContext, IUnitOfWork
 {
-    public class ShopDbContext : DbContext, IUnitOfWork
+    public ShopDbContext()
     {
-        private readonly string _connectionString;
+    }
 
-        public ShopDbContext(string connectionString)
-        {
-            _connectionString = connectionString;
-        }
+    public ShopDbContext(DbContextOptions<ShopDbContext> options)
+        : base(options)
+    {
+    }
 
-        public ShopDbContext(DbContextOptions<ShopDbContext> options) : base(options)
-        {
-            
-        }
+    public virtual DbSet<Address> Addresses { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelbuilder)
-        {
-            modelbuilder.ApplyConfigurationsFromAssembly(typeof(ShopDbContext).Assembly);
-        }
+    public virtual DbSet<BuildVersion> BuildVersions { get; set; }
 
-        public DbSet<Customer> Customers { get; set; }
+    public virtual DbSet<Customer> Customers { get; set; }
 
-        public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken)
-        {
-            var savedCount = await SaveChangesAsync(cancellationToken);
+    public virtual DbSet<CustomerAddress> CustomerAddresses { get; set; }
 
-            if (savedCount > 0)
-                return true;
+    public virtual DbSet<ErrorLog> ErrorLogs { get; set; }
 
-            return false;
-        }
+    public virtual DbSet<Product> Products { get; set; }
+
+    public virtual DbSet<ProductCategory> ProductCategories { get; set; }
+
+    public virtual DbSet<ProductDescription> ProductDescriptions { get; set; }
+
+    public virtual DbSet<ProductModel> ProductModels { get; set; }
+
+    public virtual DbSet<ProductModelProductDescription> ProductModelProductDescriptions { get; set; }
+
+    public virtual DbSet<SalesOrderDetail> SalesOrderDetails { get; set; }
+
+    public virtual DbSet<SalesOrderHeader> SalesOrderHeaders { get; set; }
+
+    public virtual DbSet<VGetAllCategory> VGetAllCategories { get; set; }
+
+    public virtual DbSet<VProductAndDescription> VProductAndDescriptions { get; set; }
+
+    public virtual DbSet<VProductModelCatalogDescription> VProductModelCatalogDescriptions { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.AddEntityConfigurations();
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ShopDbContext).Assembly);
+        OnModelCreatingPartial(modelBuilder);
+    }
+
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+    public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken)
+    {
+        var savedCount = await SaveChangesAsync(cancellationToken);
+
+        if (savedCount > 0)
+            return true;
+
+        return false;
     }
 }

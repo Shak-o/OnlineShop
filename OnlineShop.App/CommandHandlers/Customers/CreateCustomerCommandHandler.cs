@@ -28,7 +28,7 @@ namespace OnlineShop.App.CommandHandlers.Customers
 
                 mapped.PasswordHash = saltAndPass.Item1!;
                 mapped.PasswordSalt = saltAndPass.Item2;
-                mapped.RowGuid = Guid.NewGuid();
+                mapped.Rowguid = Guid.NewGuid();
 
                 await _repository.AddAsync(mapped, cancellationToken);
 
