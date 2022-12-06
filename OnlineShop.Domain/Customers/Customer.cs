@@ -1,33 +1,85 @@
-﻿namespace OnlineShop.Domain.Customers
+﻿using System;
+using System.Collections.Generic;
+using OnlineShop.Domain.Models;
+
+namespace OnlineShop.Domain.Customers;
+
+/// <summary>
+/// Customer information.
+/// </summary>
+public partial class Customer : BaseModel
 {
-        
-    public class Customer : BaseModel
-    {
-        public bool NameStyle { get; set; }
-        public string? Title { get; set; }
-        public string? FirstName { get; set; }
-        public string? MiddleName { get; set; }
-        public string? LastName { get; set; }
-        public string? Suffix { get; set; }
-        public string? CompanyName { get; set; }
-        public string? SalesPerson { get; set; }
-        public string? EmailAddress { get; set; }
-        public string? Phone { get; set; }
-        public string PasswordHash { get; set; }
-        public string PasswordSalt { get; set; }
-        public Guid RowGuid { get; set; }
-        public DateTime ModifiedDate { get; set; }
+    /// <summary>
+    /// 0 = The data in FirstName and LastName are stored in western style (first name, last name) order.  1 = Eastern style (last name, first name) order.
+    /// </summary>
+    public bool NameStyle { get; set; }
 
-        public Customer(string passwordHash, string passwordSalt, Guid rowGuid)
-        {
-            PasswordHash = passwordHash;
-            PasswordSalt = passwordSalt;
-            RowGuid = rowGuid;
-        }
+    /// <summary>
+    /// A courtesy title. For example, Mr. or Ms.
+    /// </summary>
+    public string? Title { get; set; }
 
-        public Customer()
-        {
-            
-        }
-    }
+    /// <summary>
+    /// First name of the person.
+    /// </summary>
+    public string FirstName { get; set; } = null!;
+
+    /// <summary>
+    /// Middle name or middle initial of the person.
+    /// </summary>
+    public string? MiddleName { get; set; }
+
+    /// <summary>
+    /// Last name of the person.
+    /// </summary>
+    public string LastName { get; set; } = null!;
+
+    /// <summary>
+    /// Surname suffix. For example, Sr. or Jr.
+    /// </summary>
+    public string? Suffix { get; set; }
+
+    /// <summary>
+    /// The customer&apos;s organization.
+    /// </summary>
+    public string? CompanyName { get; set; }
+
+    /// <summary>
+    /// The customer&apos;s sales person, an employee of AdventureWorks Cycles.
+    /// </summary>
+    public string? SalesPerson { get; set; }
+
+    /// <summary>
+    /// E-mail address for the person.
+    /// </summary>
+    public string? EmailAddress { get; set; }
+
+    /// <summary>
+    /// Phone number associated with the person.
+    /// </summary>
+    public string? Phone { get; set; }
+
+    /// <summary>
+    /// Password for the e-mail account.
+    /// </summary>
+    public string PasswordHash { get; set; } = null!;
+
+    /// <summary>
+    /// Random value concatenated with the password string before the password is hashed.
+    /// </summary>
+    public string PasswordSalt { get; set; } = null!;
+
+    /// <summary>
+    /// ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.
+    /// </summary>
+    public Guid Rowguid { get; set; }
+
+    /// <summary>
+    /// Date and time the record was last updated.
+    /// </summary>
+    public DateTime ModifiedDate { get; set; }
+
+    public virtual ICollection<CustomerAddress> CustomerAddresses { get; } = new List<CustomerAddress>();
+
+    public virtual ICollection<SalesOrderHeader> SalesOrderHeaders { get; } = new List<SalesOrderHeader>();
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using MediatR;
 
@@ -20,6 +21,8 @@ namespace OnlineShop.Domain.Customers.Commands
         public string? SalesPerson { get; set; }
         public string? EmailAddress { get; set; }
         public string? Phone { get; set; }
-        public string? Password { get; set; }
+        public string Password { get; set; }
+        [JsonIgnore]
+        public DateTime ModifiedDate { get; set; }
     }
 }
