@@ -20,7 +20,7 @@ namespace OnlineShop.App.CommandHandlers.Customers
 
         public async Task<Unit> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
         {
-            //request.ModifiedDate = DateTime.Now;
+            request.ModifiedDate = DateTime.Now;
             
             var converted = _mapper.Map<Customer>(request);
             var hashAndSalt = HashHelper.CreateHashWithSalt(request.Password);
