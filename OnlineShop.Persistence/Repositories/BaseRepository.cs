@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using OnlineShop.Domain;
 using OnlineShop.Persistence.Interfaces;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Query;
 using OnlineShop.Persistence.Helpers;
 
 namespace OnlineShop.Persistence.Repositories
@@ -23,15 +24,32 @@ namespace OnlineShop.Persistence.Repositories
 
         public async Task<T> GetFirstAsync(Expression<Func<T, bool>> filter, string[] includes, CancellationToken cancellationToken)
         {
-            var toreTurn = _table.Include(includes[0]).Where(filter);
+            
+            var toreTurn = _table.Include("CustomerAddresses").Where(filter);
             return await toreTurn.FirstAsync(cancellationToken);
         }
 
-        public IQueryable<T> GetAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, string[]? includes = null)
+        public async Task<List<T>> GetAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, string[]? includes = null, params string[] includeProperties)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                var toreTurn = await _table.Where(filter).ToListAsync(cancellationToken);
 
-            return _table.Where(filter);
+                foreach (var item in toreTurn)
+                {
+                    foreach (var prop in includeProperties)
+                    {
+                        await _test.Entry(item).Collection(prop).LoadAsync(cancellationToken);
+                    }
+                }
+
+                return toreTurn;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"{ex.Message}");
+            }
         }
 
         public async Task AddAsync(T obj, CancellationToken cancellationToken)

@@ -11,7 +11,8 @@
 
 <button class="btn btn-primary" @onclick="Create">Create</button>
 <button class="btn btn-primary" @onclick="Update">Update</button>
-<button class="btn btn-primary" @onclick="IncrementCount">Delete</button>
+<button class="btn btn-primary" @onclick="Delete">Delete</button>
+<button class="btn btn-primary" @onclick="GetAsync">GET</button>
 
 @code {
     private int currentCount = 0;
@@ -60,5 +61,21 @@
         };
 
         await _mediator.Send(updateCustomerCommand);
+    }
+
+    private async Task Delete()
+    {
+        var command = new DeleteCustomerCommand()
+        {
+            Id = 30119
+        };
+
+        await _mediator.Send(command);
+    }
+
+    private async Task GetAsync()
+    {
+        var command = new GetCustomersCommand() { Filter = (x => x.FirstName == "test"), Includes = new string[] { "CustomerAddresses", "SalesOrderHeaders" } };
+        await _mediator.Send(command);
     }
 }

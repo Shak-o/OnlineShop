@@ -19,7 +19,7 @@ namespace OnlineShop.App.CommandHandlers.Customers
         {
             try
             {
-                var result = await _repository.GetAsync(request.Filter, cancellationToken).ToListAsync(cancellationToken);
+                var result = await _repository.GetAsync(request.Filter, cancellationToken, request.Includes, "CustomerAddresses", "SalesOrderHeaders");
                 return result;
             }
             catch (Exception ex)
