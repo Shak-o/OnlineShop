@@ -1,8 +1,6 @@
-﻿using MediatR;
-
-namespace OnlineShop.Domain.Addresses.Commands
+﻿namespace OnlineShop.Domain.Addresses.Queries
 {
-    public class CreateAddressCommand : IRequest
+    public class AddressQuery
     {
         /// <summary>
         /// First street address line.
@@ -31,5 +29,14 @@ namespace OnlineShop.Domain.Addresses.Commands
         /// </summary>
         public string PostalCode { get; set; } = null!;
 
+        /// <summary>
+        /// ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.
+        /// </summary>
+        public Guid Rowguid { get; set; }
+
+        /// <summary>
+        /// Date and time the record was last updated.
+        /// </summary>
+        public DateTime ModifiedDate { get; set; }
     }
 }

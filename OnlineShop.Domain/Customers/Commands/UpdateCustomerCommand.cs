@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using MediatR;
+using OnlineShop.Domain.Addresses.Queries;
 
 namespace OnlineShop.Domain.Customers.Commands
 {
@@ -22,7 +23,7 @@ namespace OnlineShop.Domain.Customers.Commands
         public string? EmailAddress { get; set; }
         public string? Phone { get; set; }
         public string Password { get; set; }
-        [JsonIgnore]
         public DateTime ModifiedDate { get; set; }
+        public List<AddressQuery> AddressQueries { get; set; }
     }
 }

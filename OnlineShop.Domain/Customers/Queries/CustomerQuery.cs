@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OnlineShop.Domain.Addresses.Queries;
 
 namespace OnlineShop.Domain.Customers.Queries
 {
-    public class GetCustomerQuery
+    public class CustomerQuery
     {
         /// <summary>
         /// First name of the person.
@@ -41,5 +42,7 @@ namespace OnlineShop.Domain.Customers.Queries
         /// Address Count
         /// </summary>
         public int NumberOfAddresses { get; set; }
+
+        public List<AddressQuery> Addresses { get; set; }
     }
 }

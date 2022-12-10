@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using OnlineShop.App;
 using OnlineShop.App.Extensions;
 using OnlineShop.App.Mapping;
+using OnlineShop.App.Options;
 using OnlineShop.Client.Data;
 using OnlineShop.Domain.Customers;
 using OnlineShop.Persistence;
@@ -22,6 +23,7 @@ builder.Services.AddScoped<ICustomerRepository, CustomersRepository>();
 builder.Services.AddDbContext<ShopDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<DbContext, ShopDbContext>();
 builder.Services.AddAutoMapper(typeof(AutoMapperConfiguration));
+builder.Services.Configure<PagingOptions>(builder.Configuration.GetSection("Paging"));
 
 var app = builder.Build();
 

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using OnlineShop.Domain.Addresses;
+using OnlineShop.Domain.Addresses.Queries;
 using OnlineShop.Domain.Customers;
 using OnlineShop.Domain.Customers.Queries;
 using OnlineShop.Persistence.Interfaces;
@@ -9,13 +11,15 @@ namespace OnlineShop.Persistence.Repositories
     public class CustomersRepository : BaseRepository<Customer>, ICustomerRepository
     {
         private readonly ShopDbContext _context;
+        private readonly IMapper _mapper;
 
         public CustomersRepository(ShopDbContext context, IMapper mapper) : base(context, mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<List<GetCustomerQuery>> GetCustomersAsync(int page, int count)
+        public async Task<List<CustomerQuery>> GetCustomersAsync(int page, int count)
         {
             try
             {
@@ -26,10 +30,11 @@ namespace OnlineShop.Persistence.Repositories
 
                 var toReturn = await _context.Customers
                     .Include(x => x.CustomerAddresses)
+                    .ThenInclude(x => x.Address)
                     .OrderBy(x => x.Id)
                     .Skip(startIndex)
                     .Take(takeCount)
-                    .Select(customer => new GetCustomerQuery()
+                    .Select(customer => new CustomerQuery()
                     {
                         CompanyName = customer.CompanyName,
                         EmailAddress = customer.EmailAddress,
@@ -37,6 +42,7 @@ namespace OnlineShop.Persistence.Repositories
                         LastName = customer.LastName,
                         Phone = customer.Phone,
                         NumberOfAddresses = customer.CustomerAddresses.Count,
+                        Addresses = _mapper.Map<List<Address>, List<AddressQuery>>(customer.CustomerAddresses.Select(x => x.Address).ToList()),
                         Password = "******"
                     })
                     .ToListAsync();

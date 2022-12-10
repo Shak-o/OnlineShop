@@ -4,6 +4,6 @@ namespace OnlineShop.Persistence.Interfaces
 {
     public interface ICustomerRepository
     {
-        Task<List<GetCustomerQuery>> GetCustomersAsync(int page, int count);
+        Task<List<CustomerQuery>> GetCustomersAsync(int page, int count);
     }
 }

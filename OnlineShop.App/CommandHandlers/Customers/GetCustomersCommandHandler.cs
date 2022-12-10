@@ -1,24 +1,28 @@
 ﻿using MediatR;
-using OnlineShop.Domain.Customers;
+using Microsoft.Extensions.Options;
+using OnlineShop.App.Options;
 using OnlineShop.Domain.Customers.Commands;
+using OnlineShop.Domain.Customers.Queries;
 using OnlineShop.Persistence.Interfaces;
 
 namespace OnlineShop.App.CommandHandlers.Customers
 {
-    public class GetCustomersCommandHandler : IRequestHandler<GetCustomersCommand, List<Customer>>
+    public class GetCustomersCommandHandler : IRequestHandler<GetCustomersCommand, List<CustomerQuery>>
     {
-        private readonly IRepository<Customer> _repository;
+        private readonly ICustomerRepository _repository;
+        private readonly IOptions<PagingOptions> _options;
 
-        public GetCustomersCommandHandler(IRepository<Customer> repository)
+        public GetCustomersCommandHandler(ICustomerRepository repository, IOptions<PagingOptions> options)
         {
             _repository = repository;
+            _options = options;
         }
 
-        public async Task<List<Customer>> Handle(GetCustomersCommand request, CancellationToken cancellationToken)
+        public async Task<List<CustomerQuery>> Handle(GetCustomersCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                var result = await _repository.GetAsync(request.Filter, cancellationToken, request.Includes);
+                var result = await _repository.GetCustomersAsync(request.Page, _options.Value.Count);
                 return result;
             }
             catch (Exception ex)
