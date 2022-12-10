@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OnlineShop.Domain.Addresses;
 using OnlineShop.Domain.Customers;
 using OnlineShop.Domain.Models;
 
@@ -10,7 +11,7 @@ namespace OnlineShop.Persistence.Helpers
         {
             modelBuilder.Entity<Address>(entity =>
             {
-                entity.HasKey(e => e.AddressId).HasName("PK_Address_AddressID");
+                entity.HasKey(e => e.Id).HasName("PK_Address_AddressID");
 
                 entity.ToTable("Address", "SalesLT", tb => tb.HasComment("Street address information for customers."));
 
@@ -20,7 +21,7 @@ namespace OnlineShop.Persistence.Helpers
 
                 entity.HasIndex(e => e.StateProvince, "IX_Address_StateProvince");
 
-                entity.Property(e => e.AddressId)
+                entity.Property(e => e.Id)
                     .HasComment("Primary key for Address records.")
                     .HasColumnName("AddressID");
                 entity.Property(e => e.AddressLine1)

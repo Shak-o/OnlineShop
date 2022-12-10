@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using OnlineShop.Domain.Customers;
 using OnlineShop.Domain.Customers.Commands;
 using OnlineShop.Persistence.Interfaces;
@@ -19,7 +18,7 @@ namespace OnlineShop.App.CommandHandlers.Customers
         {
             try
             {
-                var result = await _repository.GetAsync(request.Filter, cancellationToken, request.Includes, "CustomerAddresses", "SalesOrderHeaders");
+                var result = await _repository.GetAsync(request.Filter, cancellationToken, request.Includes);
                 return result;
             }
             catch (Exception ex)

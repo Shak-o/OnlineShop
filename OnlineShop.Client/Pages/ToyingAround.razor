@@ -1,7 +1,10 @@
 ﻿@page "/counter"
 @using MediatR
 @using OnlineShop.Domain.Customers.Commands
+@using OnlineShop.Persistence.Interfaces
+
 @inject IMediator _mediator
+@inject ICustomerRepository _customerRepo
 
 <PageTitle>Counter</PageTitle>
 
@@ -24,22 +27,24 @@
 
     private async Task Create()
     {
-        var createCommand = new CreateCustomerCommand
-        {
-            NameStyle = false, 
-            Title = "test", 
-            FirstName = "test", 
-            MiddleName = "test", 
-            LastName = "testff",
-            Suffix = "suff",
-            CompanyName = "Dummy",
-            SalesPerson = "|f", 
-            EmailAddress = "stupid.email.com", 
-            Phone = "5552234", 
-            Password = "few"
-        };
+        // var createCommand = new CreateCustomerCommand
+        // {
+        //     NameStyle = false, 
+        //     Title = "test", 
+        //     FirstName = "test", 
+        //     MiddleName = "test", 
+        //     LastName = "testff",
+        //     Suffix = "suff",
+        //     CompanyName = "Dummy",
+        //     SalesPerson = "|f", 
+        //     EmailAddress = "stupid.email.com", 
+        //     Phone = "5552234", 
+        //     Password = "few"
+        // };
+        //
+        // await _mediator.Send(createCommand);
 
-        await _mediator.Send(createCommand);
+        var test = await _customerRepo.GetCustomersAsync(58,15);
     }
 
     private async Task Update()

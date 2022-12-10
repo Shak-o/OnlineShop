@@ -36,7 +36,7 @@ namespace OnlineShop.App.CommandHandlers.Customers
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error during creation of customer:{ex.Message}");
+                throw new Exception($"Error during creation of customer:\n{ex.Message}");
             }
         }
     }

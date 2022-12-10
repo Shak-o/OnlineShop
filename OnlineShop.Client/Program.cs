@@ -18,6 +18,7 @@ builder.Services.AddSingleton<WeatherForecastService>();
 
 builder.Services.AddMediatR(typeof(Ref).Assembly);
 builder.Services.AddScoped<IRepository<Customer>, BaseRepository<Customer>>();
+builder.Services.AddScoped<ICustomerRepository, CustomersRepository>();
 builder.Services.AddDbContext<ShopDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<DbContext, ShopDbContext>();
 builder.Services.AddAutoMapper(typeof(AutoMapperConfiguration));

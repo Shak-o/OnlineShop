@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using OnlineShop.Domain;
 using OnlineShop.Persistence.Interfaces;
 using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore.Query;
-using OnlineShop.Persistence.Helpers;
 
 namespace OnlineShop.Persistence.Repositories
 {
@@ -24,12 +22,12 @@ namespace OnlineShop.Persistence.Repositories
 
         public async Task<T> GetFirstAsync(Expression<Func<T, bool>> filter, string[] includes, CancellationToken cancellationToken)
         {
-            
+
             var toreTurn = _table.Include("CustomerAddresses").Where(filter);
             return await toreTurn.FirstAsync(cancellationToken);
         }
 
-        public async Task<List<T>> GetAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, string[]? includes = null, params string[] includeProperties)
+        public async Task<List<T>> GetAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, params string[] includeProperties)
         {
             try
             {
@@ -49,6 +47,40 @@ namespace OnlineShop.Persistence.Repositories
             catch (Exception ex)
             {
                 throw new Exception($"{ex.Message}");
+            }
+        }
+
+        public async Task<List<T>> GetByPagesAsync(Expression<Func<T, bool>> filter, int page, int count, CancellationToken cancellationToken, params string[] includeProperties)
+        {
+            try
+            {
+                var max = _table.Count();
+                var maxPages = max / count;
+                var startIndex = page * count > max ? max - (max - (maxPages * count)) : page * count;
+                var takeCount = (page + 1) * count > max ? max - maxPages * count : count;
+
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var toreTurn = await _table
+                    .Where(filter)
+                    .OrderBy(x => x.Id)
+                    .Skip(startIndex)
+                    .Take(takeCount)
+                    .ToListAsync(cancellationToken);
+
+                foreach (var item in toreTurn)
+                {
+                    foreach (var prop in includeProperties)
+                    {
+                        await _test.Entry(item).Collection(prop).LoadAsync(cancellationToken);
+                    }
+                }
+
+                return toreTurn;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Ex: {ex.Message}");
             }
         }
 
@@ -78,7 +110,7 @@ namespace OnlineShop.Persistence.Repositories
                     throw new Exception("Error during updating entity");
 
                 check = _mapper.Map(obj, check);
-                
+
                 prop.SetValue(check, rowGuid);
 
                 _table.Update(check);

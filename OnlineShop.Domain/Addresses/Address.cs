@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using OnlineShop.Domain.Models;
 
-namespace OnlineShop.Domain.Models;
+namespace OnlineShop.Domain.Addresses;
 
 /// <summary>
 /// Street address information for customers.
 /// </summary>
-public partial class Address
+public partial class Address : BaseModel
 {
-    /// <summary>
-    /// Primary key for Address records.
-    /// </summary>
-    public int AddressId { get; set; }
-
     /// <summary>
     /// First street address line.
     /// </summary>
