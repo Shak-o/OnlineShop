@@ -1,9 +1,9 @@
 ﻿namespace OnlineShop.App.Exceptions
 {
-    public class ApplicationException : Exception
+    public class AppException : Exception
     {
         public string Message { get; set; }
-        public ApplicationException(string message) : base($"app error:\n{message}")
+        public AppException(string message) : base($"app error:\n{message}")
         {
             Message = message;
         }

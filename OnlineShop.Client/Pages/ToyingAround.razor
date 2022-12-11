@@ -2,6 +2,8 @@
 @using MediatR
 @using OnlineShop.Domain.Customers.Commands
 @using OnlineShop.Domain.ProductCategories.Commands
+@using OnlineShop.Domain.Products.Commands
+@using OnlineShop.Domain.Products.Queries
 @using OnlineShop.Persistence.Interfaces
 
 @inject IMediator _mediator
@@ -18,8 +20,14 @@
 <button class="btn btn-primary" @onclick="Update">Update</button>
 <button class="btn btn-primary" @onclick="Delete">Delete</button>
 <button class="btn btn-primary" @onclick="GetAsync">GET</button>
+<button class="btn btn-primary" @onclick="Check">Image</button>
+@if (Completed)
+{
+    <img src="img/test2.jpg"/>
+}
 
 @code {
+    public bool Completed { get; set; } = false;
     private int currentCount = 0;
 
     private void IncrementCount()
@@ -84,5 +92,16 @@
     {
         var command = new GetCustomersCommand() { Filter = (x => x.FirstName == "test"), Includes = new string[] { "CustomerAddresses", "SalesOrderHeaders" } };
         await _mediator.Send(command);
+    }
+
+    private async Task Check()
+    {
+        var command = new GetProductCommand() { Id = 714 };
+        var result = await _mediator.Send<ProductQueryResult>(command);
+
+        await using var stream = File.Create("D:\\Projects\\C#\\OnlineShop\\OnlineShop.Client\\wwwroot\\img\\test2.jpg");
+        stream.Write(result.ThumbNailPhoto!, 0, result.ThumbNailPhoto!.Length);
+        Completed = true;
+        StateHasChanged();
     }
 }

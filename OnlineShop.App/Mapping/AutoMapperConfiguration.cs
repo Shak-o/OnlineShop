@@ -6,6 +6,9 @@ using OnlineShop.Domain.Customers;
 using OnlineShop.Domain.Customers.Commands;
 using OnlineShop.Domain.ProductCategories;
 using OnlineShop.Domain.ProductCategories.Queries;
+using OnlineShop.Domain.Products;
+using OnlineShop.Domain.Products.Commands;
+using OnlineShop.Domain.Products.Queries;
 
 namespace OnlineShop.App.Mapping
 {
@@ -22,6 +25,10 @@ namespace OnlineShop.App.Mapping
             CreateMap<UpdateAddressCommand, Address>();
 
             CreateMap<ProductCategory, ProductCategoryQueryResult>();
+
+            CreateMap<Product, ProductQueryResult>();
+            CreateMap<CreateProductCommand, Product>();
+            CreateMap<UpdateProductCommand, Product>();
         }
     }
 }

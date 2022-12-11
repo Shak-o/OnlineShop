@@ -6,6 +6,7 @@ using OnlineShop.App.Options;
 using OnlineShop.Client.Data;
 using OnlineShop.Domain.Addresses;
 using OnlineShop.Domain.Customers;
+using OnlineShop.Domain.Products;
 using OnlineShop.Persistence;
 using OnlineShop.Persistence.Interfaces;
 using OnlineShop.Persistence.Repositories;
@@ -21,6 +22,8 @@ builder.Services.AddMediatR(typeof(Ref).Assembly);
 
 builder.Services.AddScoped<IRepository<Customer>, BaseRepository<Customer>>();
 builder.Services.AddScoped<IRepository<Address>, BaseRepository<Address>>();
+builder.Services.AddScoped<IRepository<Product>, BaseRepository<Product>>();
+
 builder.Services.AddScoped<ICustomerRepository, CustomersRepository>();
 builder.Services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
 
