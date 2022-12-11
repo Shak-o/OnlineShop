@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using OnlineShop.Domain.Products;
+using OnlineShop.Domain.SalesOrderHeaders;
 
 namespace OnlineShop.Domain.Models;
 

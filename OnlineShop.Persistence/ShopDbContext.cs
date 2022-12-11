@@ -2,6 +2,9 @@
 using OnlineShop.Domain.Addresses;
 using OnlineShop.Domain.Customers;
 using OnlineShop.Domain.Models;
+using OnlineShop.Domain.ProductCategories;
+using OnlineShop.Domain.Products;
+using OnlineShop.Domain.SalesOrderHeaders;
 using OnlineShop.Persistence.Helpers;
 using OnlineShop.Persistence.Interfaces;
 

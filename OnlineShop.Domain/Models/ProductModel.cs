@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using OnlineShop.Domain.Products;
 
 namespace OnlineShop.Domain.Models;
 

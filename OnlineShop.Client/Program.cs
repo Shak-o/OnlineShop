@@ -1,10 +1,10 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using OnlineShop.App;
-using OnlineShop.App.Extensions;
 using OnlineShop.App.Mapping;
 using OnlineShop.App.Options;
 using OnlineShop.Client.Data;
+using OnlineShop.Domain.Addresses;
 using OnlineShop.Domain.Customers;
 using OnlineShop.Persistence;
 using OnlineShop.Persistence.Interfaces;
@@ -18,10 +18,15 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 
 builder.Services.AddMediatR(typeof(Ref).Assembly);
+
 builder.Services.AddScoped<IRepository<Customer>, BaseRepository<Customer>>();
+builder.Services.AddScoped<IRepository<Address>, BaseRepository<Address>>();
 builder.Services.AddScoped<ICustomerRepository, CustomersRepository>();
+builder.Services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
+
 builder.Services.AddDbContext<ShopDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<DbContext, ShopDbContext>();
+
 builder.Services.AddAutoMapper(typeof(AutoMapperConfiguration));
 builder.Services.Configure<PagingOptions>(builder.Configuration.GetSection("Paging"));
 

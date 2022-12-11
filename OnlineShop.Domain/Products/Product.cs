@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using OnlineShop.Domain.Models;
+using OnlineShop.Domain.ProductCategories;
 
-namespace OnlineShop.Domain.Models;
+namespace OnlineShop.Domain.Products;
 
 /// <summary>
 /// Products sold or used in the manfacturing of sold products.
 /// </summary>
-public partial class Product
+public partial class Product : BaseModel
 {
-    /// <summary>
-    /// Primary key for Product records.
-    /// </summary>
-    public int ProductId { get; set; }
-
     /// <summary>
     /// Name of the product.
     /// </summary>

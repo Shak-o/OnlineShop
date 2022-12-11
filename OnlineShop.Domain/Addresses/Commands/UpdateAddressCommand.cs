@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MediatR;
 
 namespace OnlineShop.Domain.Addresses.Commands
 {
-    public class UpdateAddressCommand
+    public class UpdateAddressCommand : IRequest
     {
         /// <summary>
         /// First street address line.

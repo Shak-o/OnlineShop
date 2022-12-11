@@ -8,9 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Customers\Validators\" />
-    <Folder Include="ProductCategories\Commands\" />
-    <Folder Include="SalesOrderHeaders\" />
-    <Folder Include="Products\" />
   </ItemGroup>
 
   <ItemGroup>

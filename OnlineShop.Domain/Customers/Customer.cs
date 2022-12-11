@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using OnlineShop.Domain.Models;
+﻿using OnlineShop.Domain.Models;
+using OnlineShop.Domain.SalesOrderHeaders;
 
 namespace OnlineShop.Domain.Customers;
 
 /// <summary>
 /// Customer information.
 /// </summary>
-public partial class Customer : BaseModel
+public partial class Customer : BaseModel, IDisposable
 {
     /// <summary>
     /// 0 = The data in FirstName and LastName are stored in western style (first name, last name) order.  1 = Eastern style (last name, first name) order.
@@ -82,4 +81,8 @@ public partial class Customer : BaseModel
     public virtual ICollection<CustomerAddress> CustomerAddresses { get; } = new List<CustomerAddress>();
 
     public virtual ICollection<SalesOrderHeader> SalesOrderHeaders { get; } = new List<SalesOrderHeader>();
+
+    public void Dispose()
+    {
+    }
 }

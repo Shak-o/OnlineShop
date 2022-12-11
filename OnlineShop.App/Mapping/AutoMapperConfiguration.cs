@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using OnlineShop.Domain.Addresses;
+using OnlineShop.Domain.Addresses.Commands;
 using OnlineShop.Domain.Addresses.Queries;
 using OnlineShop.Domain.Customers;
 using OnlineShop.Domain.Customers.Commands;
+using OnlineShop.Domain.ProductCategories;
+using OnlineShop.Domain.ProductCategories.Queries;
 
 namespace OnlineShop.App.Mapping
 {
@@ -12,7 +15,13 @@ namespace OnlineShop.App.Mapping
         {
             CreateMap<CreateCustomerCommand, Customer>();
             CreateMap<UpdateCustomerCommand, Customer>();
+
             CreateMap<Address, AddressQuery>();
+            CreateMap<AddressQuery, Address>();
+            CreateMap<CreateAddressCommand, Address>();
+            CreateMap<UpdateAddressCommand, Address>();
+
+            CreateMap<ProductCategory, ProductCategoryQueryResult>();
         }
     }
 }

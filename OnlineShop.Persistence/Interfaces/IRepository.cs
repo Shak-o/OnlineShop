@@ -3,9 +3,9 @@ using System.Linq.Expressions;
 
 namespace OnlineShop.Persistence.Interfaces
 {
-    public interface IRepository<T> where T : BaseModel
+    public interface IRepository<T> where T : BaseModel, IDisposable
     {
-        Task<T> GetFirstAsync(Expression<Func<T, bool>> filter, string[] includes, CancellationToken cancellationToken);
+        Task<T> GetFirstAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default, params string[] includeProperties);
         Task<List<T>> GetAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, params string[] includeProperties);
         Task<List<T>> GetByPagesAsync(Expression<Func<T, bool>> filter, int page, int count, CancellationToken cancellationToken, params string[] includeProperties);
         Task AddAsync(T obj, CancellationToken cancellationToken);

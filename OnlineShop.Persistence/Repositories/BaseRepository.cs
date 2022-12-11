@@ -2,28 +2,39 @@
 using Microsoft.EntityFrameworkCore;
 using OnlineShop.Domain;
 using OnlineShop.Persistence.Interfaces;
+using System.Collections;
 using System.Linq.Expressions;
 
 namespace OnlineShop.Persistence.Repositories
 {
-    public class BaseRepository<T> : IRepository<T> where T : BaseModel
+    public class BaseRepository<T> : IRepository<T> where T : BaseModel, IDisposable
     {
         private readonly DbSet<T> _table;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly ShopDbContext _test;
+        private readonly ShopDbContext _context;
+
         public BaseRepository(ShopDbContext context, IMapper mapper)
         {
-            _test = context;
+            _context = context;
             _table = context.Set<T>();
             _unitOfWork = context;
             _mapper = mapper;
         }
 
-        public async Task<T> GetFirstAsync(Expression<Func<T, bool>> filter, string[] includes, CancellationToken cancellationToken)
+        public async Task<T> GetFirstAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default, params string[] includeProperties)
         {
 
-            var toreTurn = _table.Include("CustomerAddresses").Where(filter);
+            cancellationToken.ThrowIfCancellationRequested();
+            var toreTurn = _table.Where(filter);
+
+            if (!toreTurn.Any())
+            {
+                throw new Exception("Not found");
+            }
+
+            await IncludeProperties(toreTurn, includeProperties, cancellationToken);
+
             return await toreTurn.FirstAsync(cancellationToken);
         }
 
@@ -32,17 +43,11 @@ namespace OnlineShop.Persistence.Repositories
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                var toreTurn = await _table.Where(filter).ToListAsync(cancellationToken);
+                var toreTurn = _table.Where(filter);//.ToListAsync(cancellationToken);
 
-                foreach (var item in toreTurn)
-                {
-                    foreach (var prop in includeProperties)
-                    {
-                        await _test.Entry(item).Collection(prop).LoadAsync(cancellationToken);
-                    }
-                }
+                await IncludeProperties(toreTurn, includeProperties, cancellationToken);
 
-                return toreTurn;
+                return await toreTurn.ToListAsync(cancellationToken);
             }
             catch (Exception ex)
             {
@@ -61,22 +66,16 @@ namespace OnlineShop.Persistence.Repositories
 
                 cancellationToken.ThrowIfCancellationRequested();
 
-                var toreTurn = await _table
+                var toreTurn = _table
                     .Where(filter)
                     .OrderBy(x => x.Id)
                     .Skip(startIndex)
-                    .Take(takeCount)
-                    .ToListAsync(cancellationToken);
+                    .Take(takeCount);
+                //.ToListAsync(cancellationToken);
 
-                foreach (var item in toreTurn)
-                {
-                    foreach (var prop in includeProperties)
-                    {
-                        await _test.Entry(item).Collection(prop).LoadAsync(cancellationToken);
-                    }
-                }
+                await IncludeProperties(toreTurn, includeProperties, cancellationToken);
 
-                return toreTurn;
+                return await toreTurn.ToListAsync(cancellationToken);
             }
             catch (Exception ex)
             {
@@ -139,6 +138,29 @@ namespace OnlineShop.Persistence.Repositories
             {
                 throw new Exception($"Error happened during update. Error:{ex.Message}");
             }
+        }
+
+        private async Task IncludeProperties(IQueryable<T> toreTurn, string[] includeProperties, CancellationToken cancellationToken)
+        {
+            foreach (var item in toreTurn)
+            {
+                foreach (var prop in includeProperties)
+                {
+                    var check = toreTurn.First();
+                    var property = typeof(T).GetProperty(prop);
+                    var typeToCheck = property!.GetValue(check);
+
+                    if (typeToCheck is IEnumerable or ICollection)
+                        await _context.Entry(item).Collection(prop).LoadAsync(cancellationToken);
+                    else
+                        await _context.Entry(item).Reference(prop).LoadAsync(cancellationToken);
+                }
+            }
+        }
+
+        public void Dispose()
+        {
+            _unitOfWork.Dispose();
         }
     }
 }

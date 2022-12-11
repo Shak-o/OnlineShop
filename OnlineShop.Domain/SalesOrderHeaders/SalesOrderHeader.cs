@@ -2,19 +2,15 @@
 using System.Collections.Generic;
 using OnlineShop.Domain.Addresses;
 using OnlineShop.Domain.Customers;
+using OnlineShop.Domain.Models;
 
-namespace OnlineShop.Domain.Models;
+namespace OnlineShop.Domain.SalesOrderHeaders;
 
 /// <summary>
 /// General sales order information.
 /// </summary>
-public partial class SalesOrderHeader
+public partial class SalesOrderHeader : BaseModel
 {
-    /// <summary>
-    /// Primary key.
-    /// </summary>
-    public int SalesOrderId { get; set; }
-
     /// <summary>
     /// Incremental number to track changes to the sales order over time.
     /// </summary>

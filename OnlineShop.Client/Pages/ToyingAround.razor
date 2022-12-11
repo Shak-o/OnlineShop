@@ -1,10 +1,12 @@
 ﻿@page "/counter"
 @using MediatR
 @using OnlineShop.Domain.Customers.Commands
+@using OnlineShop.Domain.ProductCategories.Commands
 @using OnlineShop.Persistence.Interfaces
 
 @inject IMediator _mediator
 @inject ICustomerRepository _customerRepo
+@inject IProductCategoryRepository _productCategoryRepository;
 
 <PageTitle>Counter</PageTitle>
 
@@ -44,7 +46,7 @@
         //
         // await _mediator.Send(createCommand);
 
-        var test = await _customerRepo.GetCustomersAsync(58,15);
+        var test = await _productCategoryRepository.GetProductCategoriesAsync(15, 0);
     }
 
     private async Task Update()
@@ -74,8 +76,8 @@
         {
             Id = 30119
         };
-
-        await _mediator.Send(command);
+        var commandTwo = new DeleteProductCategoryCommand() { Id = 5 };
+        await _mediator.Send(commandTwo);
     }
 
     private async Task GetAsync()

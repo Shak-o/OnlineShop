@@ -1,4 +1,5 @@
 ﻿using OnlineShop.Domain.Models;
+using OnlineShop.Domain.SalesOrderHeaders;
 
 namespace OnlineShop.Domain.Addresses;
 

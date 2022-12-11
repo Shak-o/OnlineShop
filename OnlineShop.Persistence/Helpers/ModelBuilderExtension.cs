@@ -2,6 +2,9 @@
 using OnlineShop.Domain.Addresses;
 using OnlineShop.Domain.Customers;
 using OnlineShop.Domain.Models;
+using OnlineShop.Domain.ProductCategories;
+using OnlineShop.Domain.Products;
+using OnlineShop.Domain.SalesOrderHeaders;
 
 namespace OnlineShop.Persistence.Helpers
 {
@@ -197,7 +200,7 @@ namespace OnlineShop.Persistence.Helpers
 
             modelBuilder.Entity<Product>(entity =>
             {
-                entity.HasKey(e => e.ProductId).HasName("PK_Product_ProductID");
+                entity.HasKey(e => e.Id).HasName("PK_Product_ProductID");
 
                 entity.ToTable("Product", "SalesLT", tb => tb.HasComment("Products sold or used in the manfacturing of sold products."));
 
@@ -207,7 +210,7 @@ namespace OnlineShop.Persistence.Helpers
 
                 entity.HasIndex(e => e.Rowguid, "AK_Product_rowguid").IsUnique();
 
-                entity.Property(e => e.ProductId)
+                entity.Property(e => e.Id)
                     .HasComment("Primary key for Product records.")
                     .HasColumnName("ProductID");
                 entity.Property(e => e.Color)
@@ -266,7 +269,7 @@ namespace OnlineShop.Persistence.Helpers
 
             modelBuilder.Entity<ProductCategory>(entity =>
             {
-                entity.HasKey(e => e.ProductCategoryId).HasName("PK_ProductCategory_ProductCategoryID");
+                entity.HasKey(e => e.Id).HasName("PK_ProductCategory_ProductCategoryID");
 
                 entity.ToTable("ProductCategory", "SalesLT", tb => tb.HasComment("High-level product categorization."));
 
@@ -274,7 +277,7 @@ namespace OnlineShop.Persistence.Helpers
 
                 entity.HasIndex(e => e.Rowguid, "AK_ProductCategory_rowguid").IsUnique();
 
-                entity.Property(e => e.ProductCategoryId)
+                entity.Property(e => e.Id)
                     .HasComment("Primary key for ProductCategory records.")
                     .HasColumnName("ProductCategoryID");
                 entity.Property(e => e.ModifiedDate)
@@ -432,7 +435,7 @@ namespace OnlineShop.Persistence.Helpers
 
             modelBuilder.Entity<SalesOrderHeader>(entity =>
             {
-                entity.HasKey(e => e.SalesOrderId).HasName("PK_SalesOrderHeader_SalesOrderID");
+                entity.HasKey(e => e.Id).HasName("PK_SalesOrderHeader_SalesOrderID");
 
                 entity.ToTable("SalesOrderHeader", "SalesLT", tb =>
                 {
@@ -446,7 +449,7 @@ namespace OnlineShop.Persistence.Helpers
 
                 entity.HasIndex(e => e.CustomerId, "IX_SalesOrderHeader_CustomerID");
 
-                entity.Property(e => e.SalesOrderId)
+                entity.Property(e => e.Id)
                     .HasComment("Primary key.")
                     .HasColumnName("SalesOrderID");
                 entity.Property(e => e.AccountNumber)

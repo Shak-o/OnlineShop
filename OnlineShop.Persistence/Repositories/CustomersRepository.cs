@@ -8,7 +8,7 @@ using OnlineShop.Persistence.Interfaces;
 
 namespace OnlineShop.Persistence.Repositories
 {
-    public class CustomersRepository : BaseRepository<Customer>, ICustomerRepository
+    public class CustomersRepository : BaseRepository<Customer>, ICustomerRepository, IDisposable
     {
         private readonly ShopDbContext _context;
         private readonly IMapper _mapper;
@@ -54,7 +54,5 @@ namespace OnlineShop.Persistence.Repositories
                 throw new Exception($"{ex.Message}");
             }
         }
-
-
     }
 }

@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using OnlineShop.Domain.Products;
 
-namespace OnlineShop.Domain.Models;
+namespace OnlineShop.Domain.ProductCategories;
 
 /// <summary>
 /// High-level product categorization.
 /// </summary>
-public partial class ProductCategory
+public partial class ProductCategory : BaseModel, IDisposable
 {
-    /// <summary>
-    /// Primary key for ProductCategory records.
-    /// </summary>
-    public int ProductCategoryId { get; set; }
-
     /// <summary>
     /// Product category identification number of immediate ancestor category. Foreign key to ProductCategory.ProductCategoryID.
     /// </summary>
@@ -38,4 +34,10 @@ public partial class ProductCategory
     public virtual ProductCategory? ParentProductCategory { get; set; }
 
     public virtual ICollection<Product> Products { get; } = new List<Product>();
+
+    public void Dispose()
+    {
+        ParentProductCategory.Dispose();
+    }
+
 }
