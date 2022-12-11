@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using OnlineShop.Domain.Addresses;
+﻿using OnlineShop.Domain.Addresses;
 using OnlineShop.Domain.Customers;
 using OnlineShop.Domain.Models;
 
@@ -9,7 +7,7 @@ namespace OnlineShop.Domain.SalesOrderHeaders;
 /// <summary>
 /// General sales order information.
 /// </summary>
-public partial class SalesOrderHeader : BaseModel
+public partial class SalesOrderHeader : BaseModel, IDisposable
 {
     /// <summary>
     /// Incremental number to track changes to the sales order over time.
@@ -123,4 +121,11 @@ public partial class SalesOrderHeader : BaseModel
     public virtual ICollection<SalesOrderDetail> SalesOrderDetails { get; } = new List<SalesOrderDetail>();
 
     public virtual Address? ShipToAddress { get; set; }
+
+    public void Dispose()
+    {
+        BillToAddress?.Dispose();
+        Customer.Dispose();
+        ShipToAddress?.Dispose();
+    }
 }

@@ -38,6 +38,35 @@ namespace OnlineShop.Persistence.Repositories
             return await toreTurn.FirstAsync(cancellationToken);
         }
 
+        public T GetFirst(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default, params string[] includeProperties)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var toreTurn = _table.Where(filter);
+
+            if (!toreTurn.Any())
+            {
+                throw new Exception("Not found");
+            }
+
+            foreach (var item in toreTurn)
+            {
+                foreach (var prop in includeProperties)
+                {
+                    var check = toreTurn.First();
+                    var property = typeof(T).GetProperty(prop);
+                    var typeToCheck = property!.GetValue(check);
+
+                    if (typeToCheck is IEnumerable or ICollection)
+                        _context.Entry(item).Collection(prop).Load();
+                    else
+                        _context.Entry(item).Reference(prop).Load();
+                }
+            }
+
+            return toreTurn.First();
+        }
+
         public async Task<List<T>> GetAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, params string[] includeProperties)
         {
             try

@@ -430,7 +430,9 @@ namespace OnlineShop.Persistence.Helpers
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
 
-                entity.HasOne(d => d.SalesOrder).WithMany(p => p.SalesOrderDetails).HasForeignKey(d => d.SalesOrderId);
+                entity.HasOne(d => d.SalesOrder).WithMany(p => p.SalesOrderDetails)
+                    .HasForeignKey(d => d.SalesOrderId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<SalesOrderHeader>(entity =>

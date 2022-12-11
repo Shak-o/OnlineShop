@@ -9,6 +9,7 @@ namespace OnlineShop.Domain.Customers.Queries
 {
     public class CustomerQuery
     {
+        public int Id { get; set; }
         /// <summary>
         /// First name of the person.
         /// </summary>
