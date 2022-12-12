@@ -1,12 +1,16 @@
 using MediatR;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OnlineShop.App;
 using OnlineShop.App.Mapping;
 using OnlineShop.App.Options;
+using OnlineShop.Client.Areas.Identity;
 using OnlineShop.Client.Data;
 using OnlineShop.Domain.Addresses;
 using OnlineShop.Domain.Customers;
 using OnlineShop.Domain.Products;
+using OnlineShop.Domain.SalesOrderHeaders;
 using OnlineShop.Persistence;
 using OnlineShop.Persistence.Interfaces;
 using OnlineShop.Persistence.Repositories;
@@ -23,6 +27,7 @@ builder.Services.AddMediatR(typeof(Ref).Assembly);
 builder.Services.AddScoped<IRepository<Customer>, BaseRepository<Customer>>();
 builder.Services.AddScoped<IRepository<Address>, BaseRepository<Address>>();
 builder.Services.AddScoped<IRepository<Product>, BaseRepository<Product>>();
+builder.Services.AddScoped<IRepository<SalesOrderHeader>, BaseRepository<SalesOrderHeader>>();
 
 builder.Services.AddScoped<ICustomerRepository, CustomersRepository>();
 builder.Services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
@@ -32,6 +37,16 @@ builder.Services.AddScoped<DbContext, ShopDbContext>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperConfiguration));
 builder.Services.Configure<PagingOptions>(builder.Configuration.GetSection("Paging"));
+
+
+builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<Customer>>();
+builder.Services.AddDefaultIdentity<Customer>(options =>
+    {
+        options.SignIn.RequireConfirmedAccount = false;
+        options.SignIn.RequireConfirmedEmail = false;
+        options.SignIn.RequireConfirmedPhoneNumber = false;
+    })
+    .AddEntityFrameworkStores<ShopDbContext>();
 
 var app = builder.Build();
 
@@ -48,6 +63,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");

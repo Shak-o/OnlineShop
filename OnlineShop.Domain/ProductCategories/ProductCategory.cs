@@ -7,7 +7,7 @@ namespace OnlineShop.Domain.ProductCategories;
 /// <summary>
 /// High-level product categorization.
 /// </summary>
-public partial class ProductCategory : BaseModel, IDisposable
+public partial class ProductCategory : IBaseModel, IDisposable
 {
     /// <summary>
     /// Product category identification number of immediate ancestor category. Foreign key to ProductCategory.ProductCategoryID.
@@ -40,4 +40,5 @@ public partial class ProductCategory : BaseModel, IDisposable
         ParentProductCategory.Dispose();
     }
 
+    public int Id { get; set; }
 }

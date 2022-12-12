@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace OnlineShop.Persistence.Repositories
 {
-    public class BaseRepository<T> : IRepository<T> where T : BaseModel, IDisposable
+    public class BaseRepository<T> : IRepository<T> where T : class, IBaseModel, IDisposable
     {
         private readonly DbSet<T> _table;
         private readonly IUnitOfWork _unitOfWork;

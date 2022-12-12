@@ -6,7 +6,7 @@ namespace OnlineShop.Domain.Addresses;
 /// <summary>
 /// Street address information for customers.
 /// </summary>
-public partial class Address : BaseModel, IDisposable
+public partial class Address : IBaseModel, IDisposable
 {
     /// <summary>
     /// First street address line.
@@ -54,4 +54,6 @@ public partial class Address : BaseModel, IDisposable
     public void Dispose()
     {
     }
+
+    public int Id { get; set; }
 }

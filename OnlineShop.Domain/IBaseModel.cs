@@ -1,6 +1,6 @@
 ﻿namespace OnlineShop.Domain
 {
-    public class BaseModel
+    public interface IBaseModel : IDisposable
     {
         public int Id { get; set; }
     }

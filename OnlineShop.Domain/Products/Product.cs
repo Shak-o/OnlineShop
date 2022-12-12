@@ -8,7 +8,7 @@ namespace OnlineShop.Domain.Products;
 /// <summary>
 /// Products sold or used in the manfacturing of sold products.
 /// </summary>
-public partial class Product : BaseModel, IDisposable
+public partial class Product : IBaseModel, IDisposable
 {
     /// <summary>
     /// Name of the product.
@@ -100,4 +100,6 @@ public partial class Product : BaseModel, IDisposable
     {
         ProductCategory?.Dispose();
     }
+
+    public int Id { get; set; }
 }

@@ -1,4 +1,5 @@
-﻿using OnlineShop.Domain.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using OnlineShop.Domain.Models;
 using OnlineShop.Domain.SalesOrderHeaders;
 
 namespace OnlineShop.Domain.Customers;
@@ -6,8 +7,9 @@ namespace OnlineShop.Domain.Customers;
 /// <summary>
 /// Customer information.
 /// </summary>
-public partial class Customer : BaseModel, IDisposable
+public partial class Customer : IdentityUser<int>, IBaseModel
 {
+    public int Id { get; set; }
     /// <summary>
     /// 0 = The data in FirstName and LastName are stored in western style (first name, last name) order.  1 = Eastern style (last name, first name) order.
     /// </summary>
@@ -57,11 +59,6 @@ public partial class Customer : BaseModel, IDisposable
     /// Phone number associated with the person.
     /// </summary>
     public string? Phone { get; set; }
-
-    /// <summary>
-    /// Password for the e-mail account.
-    /// </summary>
-    public string PasswordHash { get; set; } = null!;
 
     /// <summary>
     /// Random value concatenated with the password string before the password is hashed.

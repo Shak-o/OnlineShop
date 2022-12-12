@@ -599,6 +599,76 @@ namespace OnlineShop.Persistence.Helpers
                 entity.Property(e => e.Wheel).HasMaxLength(256);
             });
 
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+            {
+                b.Property<string>("LoginProvider")
+                    .HasColumnType("nvarchar(128)")
+                    .HasMaxLength(128);
+
+                b.Property<string>("ProviderKey")
+                    .HasColumnType("nvarchar(128)")
+                    .HasMaxLength(128);
+
+                b.Property<string>("ProviderDisplayName")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<int>("UserId")
+                    .IsRequired()
+                    .HasColumnType("int");
+
+                b.HasKey("LoginProvider", "ProviderKey");
+
+                b.HasIndex("UserId");
+
+                b.ToTable("AspNetUserLogins");
+            });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+            {
+                b.Property<int>("UserId")
+                    .HasColumnType("int");
+
+                b.Property<int>("RoleId")
+                    .HasColumnType("int");
+
+                b.HasKey("UserId", "RoleId");
+
+                b.HasIndex("RoleId");
+
+                b.ToTable("AspNetUserRoles");
+            });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+            {
+                b.HasOne("OnlineShop.Domain.Customers.Customer", null)
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+            {
+                b.Property<int>("UserId")
+                    .HasColumnType("int");
+
+                b.Property<string>("LoginProvider")
+                    .HasColumnType("nvarchar(128)")
+                    .HasMaxLength(128);
+
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(128)")
+                    .HasMaxLength(128);
+
+                b.Property<string>("Value")
+                    .HasColumnType("nvarchar(max)");
+
+                b.HasKey("UserId", "LoginProvider", "Name");
+
+                b.ToTable("AspNetUserTokens");
+            });
+
             return modelBuilder;
         }
     }

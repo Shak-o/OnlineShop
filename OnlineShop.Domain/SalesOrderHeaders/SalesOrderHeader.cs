@@ -7,7 +7,7 @@ namespace OnlineShop.Domain.SalesOrderHeaders;
 /// <summary>
 /// General sales order information.
 /// </summary>
-public partial class SalesOrderHeader : BaseModel, IDisposable
+public partial class SalesOrderHeader : IBaseModel, IDisposable
 {
     /// <summary>
     /// Incremental number to track changes to the sales order over time.
@@ -128,4 +128,6 @@ public partial class SalesOrderHeader : BaseModel, IDisposable
         Customer.Dispose();
         ShipToAddress?.Dispose();
     }
+
+    public int Id { get; set; }
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using OnlineShop.Domain.Addresses;
 using OnlineShop.Domain.Customers;
 using OnlineShop.Domain.Models;
@@ -10,7 +12,7 @@ using OnlineShop.Persistence.Interfaces;
 
 namespace OnlineShop.Persistence;
 
-public partial class ShopDbContext : DbContext, IUnitOfWork
+public partial class ShopDbContext : IdentityDbContext<Customer, IdentityRole<int>, int>, IUnitOfWork
 {
     public ShopDbContext()
     {
