@@ -33,7 +33,8 @@ namespace OnlineShop.Persistence.Repositories
                 throw new Exception("Not found");
             }
 
-            await IncludeProperties(toreTurn, includeProperties, cancellationToken);
+            if (includeProperties is not null)
+                await IncludeProperties(toreTurn, includeProperties, cancellationToken);
 
             return await toreTurn.FirstAsync(cancellationToken);
         }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using OnlineShop.Domain.Accounts;
 using OnlineShop.Domain.Addresses;
 using OnlineShop.Domain.Customers;
 using OnlineShop.Domain.Models;
@@ -12,7 +13,7 @@ using OnlineShop.Persistence.Interfaces;
 
 namespace OnlineShop.Persistence;
 
-public partial class ShopDbContext : IdentityDbContext<Customer, IdentityRole<int>, int>, IUnitOfWork
+public partial class ShopDbContext : IdentityDbContext<Account>, IUnitOfWork
 {
     public ShopDbContext()
     {
@@ -24,6 +25,7 @@ public partial class ShopDbContext : IdentityDbContext<Customer, IdentityRole<in
     }
 
     public virtual DbSet<Address> Addresses { get; set; }
+    public virtual DbSet<Account> Accounts { get; set; }
 
     public virtual DbSet<BuildVersion> BuildVersions { get; set; }
 

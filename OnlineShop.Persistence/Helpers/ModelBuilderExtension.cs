@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using OnlineShop.Domain.Addresses;
 using OnlineShop.Domain.Customers;
 using OnlineShop.Domain.Models;
@@ -86,7 +87,7 @@ namespace OnlineShop.Persistence.Helpers
 
                 entity.HasIndex(e => e.EmailAddress, "IX_Customer_EmailAddress");
 
-                entity.Property(e => e.Id).HasColumnName("CustomerId")
+                entity.Property(e => e.Id)
                     .HasComment("Primary key for Customer records.")
                     .HasColumnName("CustomerID");
                 entity.Property(e => e.CompanyName)
@@ -104,19 +105,12 @@ namespace OnlineShop.Persistence.Helpers
                 entity.Property(e => e.MiddleName)
                     .HasMaxLength(50)
                     .HasComment("Middle name or middle initial of the person.");
-                // entity.Property(e => e.ModifiedDate)
-                //     .HasDefaultValueSql("(getdate())")
-                //     .HasComment("Date and time the record was last updated.")
-                //     .HasColumnType("datetime");
+                entity.Property(e => e.ModifiedDate)
+                    .HasDefaultValueSql("(getdate())")
+                    .HasComment("Date and time the record was last updated.")
+                    .HasColumnType("datetime");
                 entity.Property(e => e.NameStyle).HasComment("0 = The data in FirstName and LastName are stored in western style (first name, last name) order.  1 = Eastern style (last name, first name) order.");
-                entity.Property(e => e.PasswordHash)
-                    .HasMaxLength(128)
-                    .IsUnicode(false)
-                    .HasComment("Password for the e-mail account.");
-                entity.Property(e => e.PasswordSalt)
-                    .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("Random value concatenated with the password string before the password is hashed.");
+             
                 entity.Property(e => e.Phone)
                     .HasMaxLength(25)
                     .HasComment("Phone number associated with the person.");
@@ -430,9 +424,7 @@ namespace OnlineShop.Persistence.Helpers
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
 
-                entity.HasOne(d => d.SalesOrder).WithMany(p => p.SalesOrderDetails)
-                    .HasForeignKey(d => d.SalesOrderId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(d => d.SalesOrder).WithMany(p => p.SalesOrderDetails).HasForeignKey(d => d.SalesOrderId);
             });
 
             modelBuilder.Entity<SalesOrderHeader>(entity =>
@@ -598,9 +590,152 @@ namespace OnlineShop.Persistence.Helpers
                 entity.Property(e => e.WarrantyPeriod).HasMaxLength(256);
                 entity.Property(e => e.Wheel).HasMaxLength(256);
             });
+            modelBuilder
+               .HasAnnotation("ProductVersion", "3.0.0")
+               .HasAnnotation("Relational:MaxIdentifierLength", 128)
+               .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+            {
+                b.Property<string>("Id")
+                    .HasColumnType("nvarchar(450)");
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+                b.Property<string>("ConcurrencyStamp")
+                    .IsConcurrencyToken()
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(256)")
+                    .HasMaxLength(256);
+
+                b.Property<string>("NormalizedName")
+                    .HasColumnType("nvarchar(256)")
+                    .HasMaxLength(256);
+
+                b.HasKey("Id");
+
+                b.HasIndex("NormalizedName")
+                    .IsUnique()
+                    .HasName("RoleNameIndex")
+                    .HasFilter("[NormalizedName] IS NOT NULL");
+
+                b.ToTable("AspNetRoles");
+            });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                b.Property<string>("ClaimType")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("ClaimValue")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("RoleId")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(450)");
+
+                b.HasKey("Id");
+
+                b.HasIndex("RoleId");
+
+                b.ToTable("AspNetRoleClaims");
+            });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+            {
+                b.Property<string>("Id")
+                    .HasColumnType("nvarchar(450)");
+
+                b.Property<int>("AccessFailedCount")
+                    .HasColumnType("int");
+
+                b.Property<string>("ConcurrencyStamp")
+                    .IsConcurrencyToken()
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("Email")
+                    .HasColumnType("nvarchar(256)")
+                    .HasMaxLength(256);
+
+                b.Property<bool>("EmailConfirmed")
+                    .HasColumnType("bit");
+
+                b.Property<bool>("LockoutEnabled")
+                    .HasColumnType("bit");
+
+                b.Property<DateTimeOffset?>("LockoutEnd")
+                    .HasColumnType("datetimeoffset");
+
+                b.Property<string>("NormalizedEmail")
+                    .HasColumnType("nvarchar(256)")
+                    .HasMaxLength(256);
+
+                b.Property<string>("NormalizedUserName")
+                    .HasColumnType("nvarchar(256)")
+                    .HasMaxLength(256);
+
+                b.Property<string>("PasswordHash")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("PhoneNumber")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<bool>("PhoneNumberConfirmed")
+                    .HasColumnType("bit");
+
+                b.Property<string>("SecurityStamp")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<bool>("TwoFactorEnabled")
+                    .HasColumnType("bit");
+
+                b.Property<string>("UserName")
+                    .HasColumnType("nvarchar(256)")
+                    .HasMaxLength(256);
+
+                b.HasKey("Id");
+
+                b.HasIndex("NormalizedEmail")
+                    .HasName("EmailIndex");
+
+                b.HasIndex("NormalizedUserName")
+                    .IsUnique()
+                    .HasName("UserNameIndex")
+                    .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                b.ToTable("AspNetUsers");
+            });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                b.Property<string>("ClaimType")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("ClaimValue")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("UserId")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(450)");
+
+                b.HasKey("Id");
+
+                b.HasIndex("UserId");
+
+                b.ToTable("AspNetUserClaims");
+            });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
             {
                 b.Property<string>("LoginProvider")
                     .HasColumnType("nvarchar(128)")
@@ -613,9 +748,9 @@ namespace OnlineShop.Persistence.Helpers
                 b.Property<string>("ProviderDisplayName")
                     .HasColumnType("nvarchar(max)");
 
-                b.Property<int>("UserId")
+                b.Property<string>("UserId")
                     .IsRequired()
-                    .HasColumnType("int");
+                    .HasColumnType("nvarchar(450)");
 
                 b.HasKey("LoginProvider", "ProviderKey");
 
@@ -624,13 +759,13 @@ namespace OnlineShop.Persistence.Helpers
                 b.ToTable("AspNetUserLogins");
             });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
             {
-                b.Property<int>("UserId")
-                    .HasColumnType("int");
+                b.Property<string>("UserId")
+                    .HasColumnType("nvarchar(450)");
 
-                b.Property<int>("RoleId")
-                    .HasColumnType("int");
+                b.Property<string>("RoleId")
+                    .HasColumnType("nvarchar(450)");
 
                 b.HasKey("UserId", "RoleId");
 
@@ -639,19 +774,10 @@ namespace OnlineShop.Persistence.Helpers
                 b.ToTable("AspNetUserRoles");
             });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
             {
-                b.HasOne("OnlineShop.Domain.Customers.Customer", null)
-                    .WithMany()
-                    .HasForeignKey("UserId")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
-            });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
-            {
-                b.Property<int>("UserId")
-                    .HasColumnType("int");
+                b.Property<string>("UserId")
+                    .HasColumnType("nvarchar(450)");
 
                 b.Property<string>("LoginProvider")
                     .HasColumnType("nvarchar(128)")
@@ -669,6 +795,56 @@ namespace OnlineShop.Persistence.Helpers
                 b.ToTable("AspNetUserTokens");
             });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            {
+                b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    .WithMany()
+                    .HasForeignKey("RoleId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            {
+                b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            {
+                b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            {
+                b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    .WithMany()
+                    .HasForeignKey("RoleId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            {
+                b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
             return modelBuilder;
         }
     }

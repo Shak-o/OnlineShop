@@ -9,7 +9,7 @@
 
 <p>This component demonstrates fetching data from a service.</p>
 
-@if (_forecasts == null)
+@if (forecasts == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -25,13 +25,13 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in _forecasts)
+            @foreach (var forecast in forecasts)
             {
                 <tr>
-                    <td contenteditable="true">@forecast.Date.ToShortDateString()</td>
-                    <td contenteditable="true">@forecast.TemperatureC</td>
-                    <td contenteditable="true"> @forecast.TemperatureF</td>
-                    <td contenteditable="true">@forecast.Summary</td>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
                 </tr>
             }
         </tbody>
@@ -39,11 +39,10 @@ else
 }
 
 @code {
-    private WeatherForecast[]? _forecasts = Array.Empty<WeatherForecast>();
+    private WeatherForecast[]? forecasts;
 
     protected override async Task OnInitializedAsync()
     {
-        _forecasts = ForecastService.GetForecastAsync(DateTime.Now);
+        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
     }
-
 }

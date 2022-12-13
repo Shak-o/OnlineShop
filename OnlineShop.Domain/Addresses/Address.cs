@@ -45,11 +45,11 @@ public partial class Address : IBaseModel, IDisposable
     /// </summary>
     public DateTime ModifiedDate { get; set; }
 
-    public virtual ICollection<CustomerAddress> CustomerAddresses { get; } = new List<CustomerAddress>();
+    public virtual ICollection<CustomerAddress> CustomerAddresses { get; set; } = new List<CustomerAddress>();
 
-    public virtual ICollection<SalesOrderHeader> SalesOrderHeaderBillToAddresses { get; } = new List<SalesOrderHeader>();
+    public virtual ICollection<SalesOrderHeader> SalesOrderHeaderBillToAddresses { get; set; } = new List<SalesOrderHeader>();
 
-    public virtual ICollection<SalesOrderHeader> SalesOrderHeaderShipToAddresses { get; } = new List<SalesOrderHeader>();
+    public virtual ICollection<SalesOrderHeader> SalesOrderHeaderShipToAddresses { get; set; } = new List<SalesOrderHeader>();
 
     public void Dispose()
     {

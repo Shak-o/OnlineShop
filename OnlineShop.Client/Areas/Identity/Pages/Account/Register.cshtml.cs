@@ -23,17 +23,17 @@ namespace OnlineShop.Client.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly IUserStore<IdentityUser> _userStore;
-        private readonly IUserEmailStore<IdentityUser> _emailStore;
+        private readonly SignInManager<Domain.Accounts.Account> _signInManager;
+        private readonly UserManager<Domain.Accounts.Account> _userManager;
+        private readonly IUserStore<Domain.Accounts.Account> _userStore;
+        private readonly IUserEmailStore<Domain.Accounts.Account> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
-            UserManager<IdentityUser> userManager,
-            IUserStore<IdentityUser> userStore,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<Domain.Accounts.Account> userManager,
+            IUserStore<Domain.Accounts.Account> userStore,
+            SignInManager<Domain.Accounts.Account> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
@@ -154,11 +154,11 @@ namespace OnlineShop.Client.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private IdentityUser CreateUser()
+        private Domain.Accounts.Account CreateUser()
         {
             try
             {
-                return Activator.CreateInstance<IdentityUser>();
+                return Activator.CreateInstance<Domain.Accounts.Account>();
             }
             catch
             {
@@ -168,13 +168,13 @@ namespace OnlineShop.Client.Areas.Identity.Pages.Account
             }
         }
 
-        private IUserEmailStore<IdentityUser> GetEmailStore()
+        private IUserEmailStore<Domain.Accounts.Account> GetEmailStore()
         {
             if (!_userManager.SupportsUserEmail)
             {
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
-            return (IUserEmailStore<IdentityUser>)_userStore;
+            return (IUserEmailStore<Domain.Accounts.Account>)_userStore;
         }
     }
 }

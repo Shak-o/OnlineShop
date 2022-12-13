@@ -16,8 +16,7 @@ namespace OnlineShop.Persistence.Configurations
                 .HasColumnType("datetime")
                 .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Save);
             
-            builder.Property(x => x.PasswordHash).HasMaxLength(300);
-            builder.Property(x => x.PasswordSalt).HasMaxLength(150);
+            //builder.Property(x => x.PasswordHash).HasMaxLength(300);
         }
     }
 }

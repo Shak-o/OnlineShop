@@ -12,18 +12,275 @@ using OnlineShop.Persistence;
 namespace OnlineShop.Persistence.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    [Migration("20221210125054_addressId")]
-    partial class addressId
+    [Migration("20221213221017_accounts")]
+    partial class accounts
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0")
+                .HasAnnotation("ProductVersion", "3.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("OnlineShop.Domain.Accounts.Account", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Account");
+                });
 
             modelBuilder.Entity("OnlineShop.Domain.Addresses.Address", b =>
                 {
@@ -108,6 +365,10 @@ namespace OnlineShop.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AccoutnId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CompanyName")
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)")
@@ -144,20 +405,6 @@ namespace OnlineShop.Persistence.Migrations
                     b.Property<bool>("NameStyle")
                         .HasColumnType("bit")
                         .HasComment("0 = The data in FirstName and LastName are stored in western style (first name, last name) order.  1 = Eastern style (last name, first name) order.");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(300)")
-                        .HasComment("Password for the e-mail account.");
-
-                    b.Property<string>("PasswordSalt")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(150)")
-                        .HasComment("Random value concatenated with the password string before the password is hashed.");
 
                     b.Property<string>("Phone")
                         .HasMaxLength(25)
@@ -333,167 +580,6 @@ namespace OnlineShop.Persistence.Migrations
                     b.ToTable("ErrorLog", null, t =>
                         {
                             t.HasComment("Audit table tracking errors in the the AdventureWorks database that are caught by the CATCH block of a TRY...CATCH construct. Data is inserted by stored procedure dbo.uspLogError when it is executed from inside the CATCH block of a TRY...CATCH construct.");
-                        });
-                });
-
-            modelBuilder.Entity("OnlineShop.Domain.Models.Product", b =>
-                {
-                    b.Property<int>("ProductId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ProductID")
-                        .HasComment("Primary key for Product records.");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
-
-                    b.Property<string>("Color")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
-                        .HasComment("Product color.");
-
-                    b.Property<DateTime?>("DiscontinuedDate")
-                        .HasColumnType("datetime")
-                        .HasComment("Date the product was discontinued.");
-
-                    b.Property<decimal>("ListPrice")
-                        .HasColumnType("money")
-                        .HasComment("Selling price.");
-
-                    b.Property<DateTime>("ModifiedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())")
-                        .HasComment("Date and time the record was last updated.");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasComment("Name of the product.");
-
-                    b.Property<int?>("ProductCategoryId")
-                        .HasColumnType("int")
-                        .HasColumnName("ProductCategoryID")
-                        .HasComment("Product is a member of this product category. Foreign key to ProductCategory.ProductCategoryID. ");
-
-                    b.Property<int?>("ProductModelId")
-                        .HasColumnType("int")
-                        .HasColumnName("ProductModelID")
-                        .HasComment("Product is a member of this product model. Foreign key to ProductModel.ProductModelID.");
-
-                    b.Property<string>("ProductNumber")
-                        .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)")
-                        .HasComment("Unique product identification number.");
-
-                    b.Property<Guid>("Rowguid")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("rowguid")
-                        .HasDefaultValueSql("(newid())")
-                        .HasComment("ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.");
-
-                    b.Property<DateTime?>("SellEndDate")
-                        .HasColumnType("datetime")
-                        .HasComment("Date the product was no longer available for sale.");
-
-                    b.Property<DateTime>("SellStartDate")
-                        .HasColumnType("datetime")
-                        .HasComment("Date the product was available for sale.");
-
-                    b.Property<string>("Size")
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)")
-                        .HasComment("Product size.");
-
-                    b.Property<decimal>("StandardCost")
-                        .HasColumnType("money")
-                        .HasComment("Standard cost of the product.");
-
-                    b.Property<byte[]>("ThumbNailPhoto")
-                        .HasColumnType("varbinary(max)")
-                        .HasComment("Small image of the product.");
-
-                    b.Property<string>("ThumbnailPhotoFileName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasComment("Small image file name.");
-
-                    b.Property<decimal?>("Weight")
-                        .HasColumnType("decimal(8, 2)")
-                        .HasComment("Product weight.");
-
-                    b.HasKey("ProductId")
-                        .HasName("PK_Product_ProductID");
-
-                    b.HasIndex("ProductCategoryId");
-
-                    b.HasIndex("ProductModelId");
-
-                    b.HasIndex(new[] { "Name" }, "AK_Product_Name")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "ProductNumber" }, "AK_Product_ProductNumber")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "Rowguid" }, "AK_Product_rowguid")
-                        .IsUnique();
-
-                    b.ToTable("Product", "SalesLT", t =>
-                        {
-                            t.HasComment("Products sold or used in the manfacturing of sold products.");
-                        });
-                });
-
-            modelBuilder.Entity("OnlineShop.Domain.Models.ProductCategory", b =>
-                {
-                    b.Property<int>("ProductCategoryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ProductCategoryID")
-                        .HasComment("Primary key for ProductCategory records.");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductCategoryId"));
-
-                    b.Property<DateTime>("ModifiedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())")
-                        .HasComment("Date and time the record was last updated.");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasComment("Category description.");
-
-                    b.Property<int?>("ParentProductCategoryId")
-                        .HasColumnType("int")
-                        .HasColumnName("ParentProductCategoryID")
-                        .HasComment("Product category identification number of immediate ancestor category. Foreign key to ProductCategory.ProductCategoryID.");
-
-                    b.Property<Guid>("Rowguid")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("rowguid")
-                        .HasDefaultValueSql("(newid())")
-                        .HasComment("ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.");
-
-                    b.HasKey("ProductCategoryId")
-                        .HasName("PK_ProductCategory_ProductCategoryID");
-
-                    b.HasIndex("ParentProductCategoryId");
-
-                    b.HasIndex(new[] { "Name" }, "AK_ProductCategory_Name")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "Rowguid" }, "AK_ProductCategory_rowguid")
-                        .IsUnique();
-
-                    b.ToTable("ProductCategory", "SalesLT", t =>
-                        {
-                            t.HasComment("High-level product categorization.");
                         });
                 });
 
@@ -691,156 +777,6 @@ namespace OnlineShop.Persistence.Migrations
                         });
                 });
 
-            modelBuilder.Entity("OnlineShop.Domain.Models.SalesOrderHeader", b =>
-                {
-                    b.Property<int>("SalesOrderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("SalesOrderID")
-                        .HasComment("Primary key.");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SalesOrderId"));
-
-                    b.Property<string>("AccountNumber")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
-                        .HasComment("Financial accounting number reference.");
-
-                    b.Property<int?>("BillToAddressId")
-                        .HasColumnType("int")
-                        .HasColumnName("BillToAddressID")
-                        .HasComment("The ID of the location to send invoices.  Foreign key to the Address table.");
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)")
-                        .HasComment("Sales representative comments.");
-
-                    b.Property<string>("CreditCardApprovalCode")
-                        .HasMaxLength(15)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(15)")
-                        .HasComment("Approval code provided by the credit card company.");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int")
-                        .HasColumnName("CustomerID")
-                        .HasComment("Customer identification number. Foreign key to Customer.CustomerID.");
-
-                    b.Property<DateTime>("DueDate")
-                        .HasColumnType("datetime")
-                        .HasComment("Date the order is due to the customer.");
-
-                    b.Property<decimal>("Freight")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("money")
-                        .HasDefaultValueSql("((0.00))")
-                        .HasComment("Shipping cost.");
-
-                    b.Property<DateTime>("ModifiedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())")
-                        .HasComment("Date and time the record was last updated.");
-
-                    b.Property<bool?>("OnlineOrderFlag")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValueSql("((1))")
-                        .HasComment("0 = Order placed by sales person. 1 = Order placed online by customer.");
-
-                    b.Property<DateTime>("OrderDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())")
-                        .HasComment("Dates the sales order was created.");
-
-                    b.Property<string>("PurchaseOrderNumber")
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)")
-                        .HasComment("Customer purchase order number reference. ");
-
-                    b.Property<byte>("RevisionNumber")
-                        .HasColumnType("tinyint")
-                        .HasComment("Incremental number to track changes to the sales order over time.");
-
-                    b.Property<Guid>("Rowguid")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("rowguid")
-                        .HasDefaultValueSql("(newid())")
-                        .HasComment("ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.");
-
-                    b.Property<string>("SalesOrderNumber")
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)")
-                        .HasComputedColumnSql("(isnull(N'SO'+CONVERT([nvarchar](23),[SalesOrderID]),N'*** ERROR ***'))", false)
-                        .HasComment("Unique sales order identification number.");
-
-                    b.Property<DateTime?>("ShipDate")
-                        .HasColumnType("datetime")
-                        .HasComment("Date the order was shipped to the customer.");
-
-                    b.Property<string>("ShipMethod")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasComment("Shipping method. Foreign key to ShipMethod.ShipMethodID.");
-
-                    b.Property<int?>("ShipToAddressId")
-                        .HasColumnType("int")
-                        .HasColumnName("ShipToAddressID")
-                        .HasComment("The ID of the location to send goods.  Foreign key to the Address table.");
-
-                    b.Property<byte>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint")
-                        .HasDefaultValueSql("((1))")
-                        .HasComment("Order current status. 1 = In process; 2 = Approved; 3 = Backordered; 4 = Rejected; 5 = Shipped; 6 = Cancelled");
-
-                    b.Property<decimal>("SubTotal")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("money")
-                        .HasDefaultValueSql("((0.00))")
-                        .HasComment("Sales subtotal. Computed as SUM(SalesOrderDetail.LineTotal)for the appropriate SalesOrderID.");
-
-                    b.Property<decimal>("TaxAmt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("money")
-                        .HasDefaultValueSql("((0.00))")
-                        .HasComment("Tax amount.");
-
-                    b.Property<decimal>("TotalDue")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("money")
-                        .HasComputedColumnSql("(isnull(([SubTotal]+[TaxAmt])+[Freight],(0)))", false)
-                        .HasComment("Total due from customer. Computed as Subtotal + TaxAmt + Freight.");
-
-                    b.HasKey("SalesOrderId")
-                        .HasName("PK_SalesOrderHeader_SalesOrderID");
-
-                    b.HasIndex("BillToAddressId");
-
-                    b.HasIndex("ShipToAddressId");
-
-                    b.HasIndex(new[] { "SalesOrderNumber" }, "AK_SalesOrderHeader_SalesOrderNumber")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "Rowguid" }, "AK_SalesOrderHeader_rowguid")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "CustomerId" }, "IX_SalesOrderHeader_CustomerID");
-
-                    b.ToTable("SalesOrderHeader", "SalesLT", t =>
-                        {
-                            t.HasComment("General sales order information.");
-
-                            t.HasTrigger("uSalesOrderHeader");
-                        });
-                });
-
             modelBuilder.Entity("OnlineShop.Domain.Models.VGetAllCategory", b =>
                 {
                     b.Property<string>("ParentProductCategoryName")
@@ -1000,6 +936,368 @@ namespace OnlineShop.Persistence.Migrations
                     b.ToView("vProductModelCatalogDescription", "SalesLT");
                 });
 
+            modelBuilder.Entity("OnlineShop.Domain.ProductCategories.ProductCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ProductCategoryID")
+                        .HasComment("Primary key for ProductCategory records.");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ModifiedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("(getdate())")
+                        .HasComment("Date and time the record was last updated.");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("Category description.");
+
+                    b.Property<int?>("ParentProductCategoryId")
+                        .HasColumnType("int")
+                        .HasColumnName("ParentProductCategoryID")
+                        .HasComment("Product category identification number of immediate ancestor category. Foreign key to ProductCategory.ProductCategoryID.");
+
+                    b.Property<Guid>("Rowguid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("rowguid")
+                        .HasDefaultValueSql("(newid())")
+                        .HasComment("ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.");
+
+                    b.HasKey("Id")
+                        .HasName("PK_ProductCategory_ProductCategoryID");
+
+                    b.HasIndex("ParentProductCategoryId");
+
+                    b.HasIndex(new[] { "Name" }, "AK_ProductCategory_Name")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "Rowguid" }, "AK_ProductCategory_rowguid")
+                        .IsUnique();
+
+                    b.ToTable("ProductCategory", "SalesLT", t =>
+                        {
+                            t.HasComment("High-level product categorization.");
+                        });
+                });
+
+            modelBuilder.Entity("OnlineShop.Domain.Products.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ProductID")
+                        .HasComment("Primary key for Product records.");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Color")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)")
+                        .HasComment("Product color.");
+
+                    b.Property<DateTime?>("DiscontinuedDate")
+                        .HasColumnType("datetime")
+                        .HasComment("Date the product was discontinued.");
+
+                    b.Property<decimal>("ListPrice")
+                        .HasColumnType("money")
+                        .HasComment("Selling price.");
+
+                    b.Property<DateTime>("ModifiedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("(getdate())")
+                        .HasComment("Date and time the record was last updated.");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("Name of the product.");
+
+                    b.Property<int?>("ProductCategoryId")
+                        .HasColumnType("int")
+                        .HasColumnName("ProductCategoryID")
+                        .HasComment("Product is a member of this product category. Foreign key to ProductCategory.ProductCategoryID. ");
+
+                    b.Property<int?>("ProductModelId")
+                        .HasColumnType("int")
+                        .HasColumnName("ProductModelID")
+                        .HasComment("Product is a member of this product model. Foreign key to ProductModel.ProductModelID.");
+
+                    b.Property<string>("ProductNumber")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)")
+                        .HasComment("Unique product identification number.");
+
+                    b.Property<Guid>("Rowguid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("rowguid")
+                        .HasDefaultValueSql("(newid())")
+                        .HasComment("ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.");
+
+                    b.Property<DateTime?>("SellEndDate")
+                        .HasColumnType("datetime")
+                        .HasComment("Date the product was no longer available for sale.");
+
+                    b.Property<DateTime>("SellStartDate")
+                        .HasColumnType("datetime")
+                        .HasComment("Date the product was available for sale.");
+
+                    b.Property<string>("Size")
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)")
+                        .HasComment("Product size.");
+
+                    b.Property<decimal>("StandardCost")
+                        .HasColumnType("money")
+                        .HasComment("Standard cost of the product.");
+
+                    b.Property<byte[]>("ThumbNailPhoto")
+                        .HasColumnType("varbinary(max)")
+                        .HasComment("Small image of the product.");
+
+                    b.Property<string>("ThumbnailPhotoFileName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("Small image file name.");
+
+                    b.Property<decimal?>("Weight")
+                        .HasColumnType("decimal(8, 2)")
+                        .HasComment("Product weight.");
+
+                    b.HasKey("Id")
+                        .HasName("PK_Product_ProductID");
+
+                    b.HasIndex("ProductCategoryId");
+
+                    b.HasIndex("ProductModelId");
+
+                    b.HasIndex(new[] { "Name" }, "AK_Product_Name")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "ProductNumber" }, "AK_Product_ProductNumber")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "Rowguid" }, "AK_Product_rowguid")
+                        .IsUnique();
+
+                    b.ToTable("Product", "SalesLT", t =>
+                        {
+                            t.HasComment("Products sold or used in the manfacturing of sold products.");
+                        });
+                });
+
+            modelBuilder.Entity("OnlineShop.Domain.SalesOrderHeaders.SalesOrderHeader", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("SalesOrderID")
+                        .HasComment("Primary key.");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AccountNumber")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)")
+                        .HasComment("Financial accounting number reference.");
+
+                    b.Property<int?>("BillToAddressId")
+                        .HasColumnType("int")
+                        .HasColumnName("BillToAddressID")
+                        .HasComment("The ID of the location to send invoices.  Foreign key to the Address table.");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)")
+                        .HasComment("Sales representative comments.");
+
+                    b.Property<string>("CreditCardApprovalCode")
+                        .HasMaxLength(15)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(15)")
+                        .HasComment("Approval code provided by the credit card company.");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int")
+                        .HasColumnName("CustomerID")
+                        .HasComment("Customer identification number. Foreign key to Customer.CustomerID.");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime")
+                        .HasComment("Date the order is due to the customer.");
+
+                    b.Property<decimal>("Freight")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("money")
+                        .HasDefaultValueSql("((0.00))")
+                        .HasComment("Shipping cost.");
+
+                    b.Property<DateTime>("ModifiedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("(getdate())")
+                        .HasComment("Date and time the record was last updated.");
+
+                    b.Property<bool?>("OnlineOrderFlag")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValueSql("((1))")
+                        .HasComment("0 = Order placed by sales person. 1 = Order placed online by customer.");
+
+                    b.Property<DateTime>("OrderDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("(getdate())")
+                        .HasComment("Dates the sales order was created.");
+
+                    b.Property<string>("PurchaseOrderNumber")
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)")
+                        .HasComment("Customer purchase order number reference. ");
+
+                    b.Property<byte>("RevisionNumber")
+                        .HasColumnType("tinyint")
+                        .HasComment("Incremental number to track changes to the sales order over time.");
+
+                    b.Property<Guid>("Rowguid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("rowguid")
+                        .HasDefaultValueSql("(newid())")
+                        .HasComment("ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.");
+
+                    b.Property<string>("SalesOrderNumber")
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)")
+                        .HasComputedColumnSql("(isnull(N'SO'+CONVERT([nvarchar](23),[SalesOrderID]),N'*** ERROR ***'))", false)
+                        .HasComment("Unique sales order identification number.");
+
+                    b.Property<DateTime?>("ShipDate")
+                        .HasColumnType("datetime")
+                        .HasComment("Date the order was shipped to the customer.");
+
+                    b.Property<string>("ShipMethod")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("Shipping method. Foreign key to ShipMethod.ShipMethodID.");
+
+                    b.Property<int?>("ShipToAddressId")
+                        .HasColumnType("int")
+                        .HasColumnName("ShipToAddressID")
+                        .HasComment("The ID of the location to send goods.  Foreign key to the Address table.");
+
+                    b.Property<byte>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint")
+                        .HasDefaultValueSql("((1))")
+                        .HasComment("Order current status. 1 = In process; 2 = Approved; 3 = Backordered; 4 = Rejected; 5 = Shipped; 6 = Cancelled");
+
+                    b.Property<decimal>("SubTotal")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("money")
+                        .HasDefaultValueSql("((0.00))")
+                        .HasComment("Sales subtotal. Computed as SUM(SalesOrderDetail.LineTotal)for the appropriate SalesOrderID.");
+
+                    b.Property<decimal>("TaxAmt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("money")
+                        .HasDefaultValueSql("((0.00))")
+                        .HasComment("Tax amount.");
+
+                    b.Property<decimal>("TotalDue")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("money")
+                        .HasComputedColumnSql("(isnull(([SubTotal]+[TaxAmt])+[Freight],(0)))", false)
+                        .HasComment("Total due from customer. Computed as Subtotal + TaxAmt + Freight.");
+
+                    b.HasKey("Id")
+                        .HasName("PK_SalesOrderHeader_SalesOrderID");
+
+                    b.HasIndex("BillToAddressId");
+
+                    b.HasIndex("ShipToAddressId");
+
+                    b.HasIndex(new[] { "SalesOrderNumber" }, "AK_SalesOrderHeader_SalesOrderNumber")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "Rowguid" }, "AK_SalesOrderHeader_rowguid")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "CustomerId" }, "IX_SalesOrderHeader_CustomerID");
+
+                    b.ToTable("SalesOrderHeader", "SalesLT", t =>
+                        {
+                            t.HasComment("General sales order information.");
+
+                            t.HasTrigger("uSalesOrderHeader");
+                        });
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("OnlineShop.Domain.Models.CustomerAddress", b =>
                 {
                     b.HasOne("OnlineShop.Domain.Addresses.Address", "Address")
@@ -1015,31 +1313,6 @@ namespace OnlineShop.Persistence.Migrations
                     b.Navigation("Address");
 
                     b.Navigation("Customer");
-                });
-
-            modelBuilder.Entity("OnlineShop.Domain.Models.Product", b =>
-                {
-                    b.HasOne("OnlineShop.Domain.Models.ProductCategory", "ProductCategory")
-                        .WithMany("Products")
-                        .HasForeignKey("ProductCategoryId");
-
-                    b.HasOne("OnlineShop.Domain.Models.ProductModel", "ProductModel")
-                        .WithMany("Products")
-                        .HasForeignKey("ProductModelId");
-
-                    b.Navigation("ProductCategory");
-
-                    b.Navigation("ProductModel");
-                });
-
-            modelBuilder.Entity("OnlineShop.Domain.Models.ProductCategory", b =>
-                {
-                    b.HasOne("OnlineShop.Domain.Models.ProductCategory", "ParentProductCategory")
-                        .WithMany("InverseParentProductCategory")
-                        .HasForeignKey("ParentProductCategoryId")
-                        .HasConstraintName("FK_ProductCategory_ProductCategory_ParentProductCategoryID_ProductCategoryID");
-
-                    b.Navigation("ParentProductCategory");
                 });
 
             modelBuilder.Entity("OnlineShop.Domain.Models.ProductModelProductDescription", b =>
@@ -1061,12 +1334,12 @@ namespace OnlineShop.Persistence.Migrations
 
             modelBuilder.Entity("OnlineShop.Domain.Models.SalesOrderDetail", b =>
                 {
-                    b.HasOne("OnlineShop.Domain.Models.Product", "Product")
+                    b.HasOne("OnlineShop.Domain.Products.Product", "Product")
                         .WithMany("SalesOrderDetails")
                         .HasForeignKey("ProductId")
                         .IsRequired();
 
-                    b.HasOne("OnlineShop.Domain.Models.SalesOrderHeader", "SalesOrder")
+                    b.HasOne("OnlineShop.Domain.SalesOrderHeaders.SalesOrderHeader", "SalesOrder")
                         .WithMany("SalesOrderDetails")
                         .HasForeignKey("SalesOrderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1077,7 +1350,32 @@ namespace OnlineShop.Persistence.Migrations
                     b.Navigation("SalesOrder");
                 });
 
-            modelBuilder.Entity("OnlineShop.Domain.Models.SalesOrderHeader", b =>
+            modelBuilder.Entity("OnlineShop.Domain.ProductCategories.ProductCategory", b =>
+                {
+                    b.HasOne("OnlineShop.Domain.ProductCategories.ProductCategory", "ParentProductCategory")
+                        .WithMany("InverseParentProductCategory")
+                        .HasForeignKey("ParentProductCategoryId")
+                        .HasConstraintName("FK_ProductCategory_ProductCategory_ParentProductCategoryID_ProductCategoryID");
+
+                    b.Navigation("ParentProductCategory");
+                });
+
+            modelBuilder.Entity("OnlineShop.Domain.Products.Product", b =>
+                {
+                    b.HasOne("OnlineShop.Domain.ProductCategories.ProductCategory", "ProductCategory")
+                        .WithMany("Products")
+                        .HasForeignKey("ProductCategoryId");
+
+                    b.HasOne("OnlineShop.Domain.Models.ProductModel", "ProductModel")
+                        .WithMany("Products")
+                        .HasForeignKey("ProductModelId");
+
+                    b.Navigation("ProductCategory");
+
+                    b.Navigation("ProductModel");
+                });
+
+            modelBuilder.Entity("OnlineShop.Domain.SalesOrderHeaders.SalesOrderHeader", b =>
                 {
                     b.HasOne("OnlineShop.Domain.Addresses.Address", "BillToAddress")
                         .WithMany("SalesOrderHeaderBillToAddresses")
@@ -1117,18 +1415,6 @@ namespace OnlineShop.Persistence.Migrations
                     b.Navigation("SalesOrderHeaders");
                 });
 
-            modelBuilder.Entity("OnlineShop.Domain.Models.Product", b =>
-                {
-                    b.Navigation("SalesOrderDetails");
-                });
-
-            modelBuilder.Entity("OnlineShop.Domain.Models.ProductCategory", b =>
-                {
-                    b.Navigation("InverseParentProductCategory");
-
-                    b.Navigation("Products");
-                });
-
             modelBuilder.Entity("OnlineShop.Domain.Models.ProductDescription", b =>
                 {
                     b.Navigation("ProductModelProductDescriptions");
@@ -1141,7 +1427,19 @@ namespace OnlineShop.Persistence.Migrations
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("OnlineShop.Domain.Models.SalesOrderHeader", b =>
+            modelBuilder.Entity("OnlineShop.Domain.ProductCategories.ProductCategory", b =>
+                {
+                    b.Navigation("InverseParentProductCategory");
+
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("OnlineShop.Domain.Products.Product", b =>
+                {
+                    b.Navigation("SalesOrderDetails");
+                });
+
+            modelBuilder.Entity("OnlineShop.Domain.SalesOrderHeaders.SalesOrderHeader", b =>
                 {
                     b.Navigation("SalesOrderDetails");
                 });

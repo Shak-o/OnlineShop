@@ -118,7 +118,7 @@ public partial class SalesOrderHeader : IBaseModel, IDisposable
 
     public virtual Customer Customer { get; set; } = null!;
 
-    public virtual ICollection<SalesOrderDetail> SalesOrderDetails { get; } = new List<SalesOrderDetail>();
+    public virtual ICollection<SalesOrderDetail> SalesOrderDetails { get; set; } = new List<SalesOrderDetail>();
 
     public virtual Address? ShipToAddress { get; set; }
 

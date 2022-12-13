@@ -12,15 +12,15 @@ using OnlineShop.Persistence;
 namespace OnlineShop.Persistence.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    [Migration("20221211145637_OrderDetailsOnDelete")]
-    partial class OrderDetailsOnDelete
+    [Migration("20221213211326_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0")
+                .HasAnnotation("ProductVersion", "7.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -144,20 +144,6 @@ namespace OnlineShop.Persistence.Migrations
                     b.Property<bool>("NameStyle")
                         .HasColumnType("bit")
                         .HasComment("0 = The data in FirstName and LastName are stored in western style (first name, last name) order.  1 = Eastern style (last name, first name) order.");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(300)")
-                        .HasComment("Password for the e-mail account.");
-
-                    b.Property<string>("PasswordSalt")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(150)")
-                        .HasComment("Random value concatenated with the password string before the password is hashed.");
 
                     b.Property<string>("Phone")
                         .HasMaxLength(25)

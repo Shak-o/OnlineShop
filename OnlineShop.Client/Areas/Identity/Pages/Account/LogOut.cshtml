@@ -1,8 +1,9 @@
 ﻿@page
 @using Microsoft.AspNetCore.Identity
+@using OnlineShop.Domain.Accounts
 @using OnlineShop.Domain.Customers
 @attribute [IgnoreAntiforgeryToken]
-@inject SignInManager<Customer> SignInManager
+@inject SignInManager<Account> SignInManager
 
 @functions {
     public async Task<IActionResult> OnPost()

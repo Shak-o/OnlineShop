@@ -1,11 +1,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OnlineShop.App;
 using OnlineShop.App.Mapping;
 using OnlineShop.App.Options;
-using OnlineShop.Client.Areas.Identity;
 using OnlineShop.Client.Data;
 using OnlineShop.Domain.Addresses;
 using OnlineShop.Domain.Customers;
@@ -14,6 +12,9 @@ using OnlineShop.Domain.SalesOrderHeaders;
 using OnlineShop.Persistence;
 using OnlineShop.Persistence.Interfaces;
 using OnlineShop.Persistence.Repositories;
+using Microsoft.AspNetCore.Identity;
+using OnlineShop.Client.Areas.Identity;
+using OnlineShop.Domain.Accounts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,14 +34,22 @@ builder.Services.AddScoped<ICustomerRepository, CustomersRepository>();
 builder.Services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
 
 builder.Services.AddDbContext<ShopDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<DbContext, ShopDbContext>();
+//
+// builder.Services.AddDefaultIdentity<Account>(options =>
+//     {
+//         options.SignIn.RequireConfirmedAccount = false;
+//         options.SignIn.RequireConfirmedEmail = false;
+//         options.SignIn.RequireConfirmedPhoneNumber = false;
+//     })
+//     .AddEntityFrameworkStores<ShopDbContext>();
+//
 
 builder.Services.AddAutoMapper(typeof(AutoMapperConfiguration));
 builder.Services.Configure<PagingOptions>(builder.Configuration.GetSection("Paging"));
 
 
-builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<Customer>>();
-builder.Services.AddDefaultIdentity<Customer>(options =>
+builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<Account>>();
+builder.Services.AddDefaultIdentity<Account>(options =>
     {
         options.SignIn.RequireConfirmedAccount = false;
         options.SignIn.RequireConfirmedEmail = false;
@@ -68,5 +77,6 @@ app.UseAuthorization();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
+app.UseAuthentication();;
 
 app.Run();
