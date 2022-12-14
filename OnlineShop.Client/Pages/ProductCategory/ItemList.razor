@@ -1,0 +1,76 @@
+﻿@page "/ProductCategory/list"
+@using MediatR
+@using Microsoft.AspNetCore.Mvc
+@using OnlineShop.Domain.ProductCategories.Commands
+@using OnlineShop.Domain.ProductCategories.Queries
+@inject IMediator Mediator
+@inject NavigationManager NavManager;
+
+@if (Data == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Product Count</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var product in Data)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.ProductCount.ToString()</td>
+                <td><button type="button" class="btn btn-primary" @onclick="() => Edit(product.Id)">Edit</button> <button type="button" class="btn btn-danger">Delete</button></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <nav aria-label="...">
+        <ul class="pagination">
+            @if (CurrentPage < 3)
+            {
+
+            }
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">Previous</a>
+            </li>
+
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item active">
+                <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+}
+
+@code {
+    public List<ProductCategoryListQueryResult> Data { get; set; }
+    public int MaxPages { get; set; }
+    public int CurrentPage { get; set; }
+    public int RequestedPage { get; set; }
+    public int EditId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        CurrentPage = 5;
+        var command = new GetProductCategoriesCommand() { Filter = null, Includes = null, Page = CurrentPage };
+        Data = await Mediator.Send(command);
+    }
+
+    private async Task Edit(int id)
+    {
+        NavManager.NavigateTo($"/Edit/{id}");
+        var check = EditId;
+    }
+}

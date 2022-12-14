@@ -1,0 +1,53 @@
+﻿@page "/Edit/{productId}"
+@using MediatR
+@using OnlineShop.Domain.ProductCategories.Commands
+@using OnlineShop.Domain.ProductCategories.Queries
+@inject IMediator Mediator;
+
+<form>
+    <div class="form-group">
+        <label for="exampleFormControlInput1">Name</label>
+        <input type="text" @bind="Name" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+    </div>
+    <div class="form-group">
+        <label for="exampleFormControlSelect1">Example select</label>
+        <select class="form-control" id="exampleFormControlSelect1">
+            @foreach (var data in ProductCategories)
+            {
+                    <option>@data.Name</option>
+            }
+        </select>
+    </div>
+</form>
+
+@code {
+    [Parameter]
+    public string ProductId { get; set; }
+
+    public int CurrentId { get; set; }
+
+    public int ChosenParentCategoryId
+    {
+        get; 
+        set;
+    }
+    public string Name { get; set; }
+    public List<ProductCategoryQueryResult> ProductCategories { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var command = new GetProductCategoryCommand() { Id = int.Parse(ProductId)};
+        var result = await Mediator.Send(command);
+        var secondCommand = new GetAllProductCategoriesCommand();
+        ProductCategories = await Mediator.Send(secondCommand);
+
+        Name = result.Name;
+
+    }
+
+    private void SetParentId(int id)
+    {
+        ChosenParentCategoryId = id;
+    }
+
+}

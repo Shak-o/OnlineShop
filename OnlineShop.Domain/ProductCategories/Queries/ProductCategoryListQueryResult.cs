@@ -2,6 +2,7 @@
 {
     public class ProductCategoryListQueryResult
     {
+        public int Id { get; set; }
         /// <summary>
         /// Category description.
         /// </summary>

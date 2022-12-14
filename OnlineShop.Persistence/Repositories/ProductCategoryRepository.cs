@@ -29,6 +29,7 @@ namespace OnlineShop.Persistence.Repositories
                     .Take(takeCount)
                     .Select(x => new ProductCategoryListQueryResult()
                     {
+                        Id = x.Id,
                         Name = x.Name,
                         ProductCount = x.Products.Count,
                         ModifiedDate = x.ModifiedDate

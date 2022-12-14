@@ -8,7 +8,7 @@ namespace OnlineShop.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Account> builder)
         {
-
+            
         }
     }
 }

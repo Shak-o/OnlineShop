@@ -1,15 +1,24 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.AspNetCore.Identity
+@using OnlineShop.Domain.Accounts
+@inherits LayoutComponentBase
+@inject SignInManager<Account> SignInManager;
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>OnlineShop.Client</PageTitle>
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+   
+    <AuthorizeView>
+        <Authorized>
+            <div class="sidebar">
+                <NavMenu/>
+            </div>
+        </Authorized>
+    </AuthorizeView>
 
     <main>
         <div class="top-row px-4 auth">
-            <LoginDisplay />
+            <LoginDisplay/>
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
         </div>
 
@@ -18,3 +27,13 @@
         </article>
     </main>
 </div>
+
+@code
+{
+    private bool CheckIfAuthenticated()
+    {
+        var state = AuthenticationStateProvider.GetAuthenticationStateAsync().Result;
+        var user = state.User;
+        return SignInManager.IsSignedIn(user);
+    }
+}

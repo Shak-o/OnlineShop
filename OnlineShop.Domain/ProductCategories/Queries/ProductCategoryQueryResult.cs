@@ -2,6 +2,7 @@
 {
     public class ProductCategoryQueryResult
     {
+        public int Id { get; set; }
         /// <summary>
         /// Product category identification number of immediate ancestor category. Foreign key to ProductCategory.ProductCategoryID.
         /// </summary>

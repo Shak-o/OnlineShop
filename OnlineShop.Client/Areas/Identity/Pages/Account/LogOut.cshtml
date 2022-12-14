@@ -10,6 +10,11 @@
     {
         if (SignInManager.IsSignedIn(User))
         {
+            //var f = SignInManager.UserManager.GetUserId(HttpContext.User);;
+            foreach (var claim in User.Claims)
+            {
+                var t = claim;
+            }
             await SignInManager.SignOutAsync();
         }
 

@@ -7,7 +7,9 @@ namespace OnlineShop.Persistence.Interfaces
     {
         Task<T> GetFirstAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default, params string[] includeProperties);
         T GetFirst(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default, params string[] includeProperties);
-        Task<List<T>> GetAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, params string[] includeProperties);
+
+        Task<List<T>> GetAsync(Expression<Func<T, bool>>? filter = null, CancellationToken cancellationToken = default,
+            params string[] includeProperties);
         Task<List<T>> GetByPagesAsync(Expression<Func<T, bool>> filter, int page, int count, CancellationToken cancellationToken, params string[] includeProperties);
         Task AddAsync(T obj, CancellationToken cancellationToken);
         Task UpdateAsync(T obj, CancellationToken cancellationToken);

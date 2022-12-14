@@ -116,38 +116,37 @@ namespace OnlineShop.Client.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return Page();
+            
+            var command = new CreateAccountCommand
             {
-                var command = new CreateAccountCommand
-                {
-                    NameStyle = false,
-                    FirstName = Input.FirstName,
-                    Email = Input.Email,
-                    LastName = Input.LastName,
-                    MiddleName = Input.MiddleName,
-                    Password = Input.Password,
-                    UserName = Input.UserName,
-                    Suffix = Input.Suffix,
-                    CompanyName = Input.CompanyName,
-                    SaleSperson = Input.SalesPerson,
-                    PhoneNumber = Input.PhoneNumber,
-                    Title = Input.Title
-                };
+                NameStyle = false,
+                FirstName = Input.FirstName,
+                Email = Input.Email,
+                LastName = Input.LastName,
+                MiddleName = Input.MiddleName,
+                Password = Input.Password,
+                UserName = Input.UserName,
+                Suffix = Input.Suffix,
+                CompanyName = Input.CompanyName,
+                SaleSperson = Input.SalesPerson,
+                PhoneNumber = Input.PhoneNumber,
+                Title = Input.Title
+            };
 
-                var result = await _mediator.Send(command);
+            var result = await _mediator.Send(command);
                
                 
-                if (result.Item1)
-                {
-                    _logger.LogInformation("User created a new account with password.");
+            if (result.Item1)
+            {
+                _logger.LogInformation("User created a new account with password.");
 
-                    return LocalRedirect(returnUrl);
+                return LocalRedirect(returnUrl);
                     
-                }
-                foreach (var error in result.Item2)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
+            }
+            foreach (var error in result.Item2)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
             }
 
             // If we got this far, something failed, redisplay form

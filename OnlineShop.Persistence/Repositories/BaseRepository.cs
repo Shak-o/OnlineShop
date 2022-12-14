@@ -26,6 +26,7 @@ namespace OnlineShop.Persistence.Repositories
         {
 
             cancellationToken.ThrowIfCancellationRequested();
+
             var toreTurn = _table.Where(filter);
 
             if (!toreTurn.Any())
@@ -68,13 +69,15 @@ namespace OnlineShop.Persistence.Repositories
             return toreTurn.First();
         }
 
-        public async Task<List<T>> GetAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, params string[] includeProperties)
+        public async Task<List<T>> GetAsync(Expression<Func<T, bool>>? filter = null, CancellationToken cancellationToken = default, params string[] includeProperties)
         {
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                var toreTurn = _table.Where(filter);//.ToListAsync(cancellationToken);
+                var toreTurn = _table;
 
+                if (filter != null)
+                    toreTurn.Where(filter);
                 await IncludeProperties(toreTurn, includeProperties, cancellationToken);
 
                 return await toreTurn.ToListAsync(cancellationToken);
