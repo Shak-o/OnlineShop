@@ -10,7 +10,7 @@ namespace OnlineShop.Domain.Customers;
 /// </summary>
 public partial class Customer : IBaseModel
 {
-    public string AccoutnId { get; set; }
+    public string? AccountId { get; set; }
     public int Id { get; set; }
     /// <summary>
     /// 0 = The data in FirstName and LastName are stored in western style (first name, last name) order.  1 = Eastern style (last name, first name) order.

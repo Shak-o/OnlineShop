@@ -2,47 +2,31 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+using System.Text.Encodings.Web;
+using MediatR;
+using OnlineShop.Domain.Accounts.Commands;
 
 namespace OnlineShop.Client.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<Domain.Accounts.Account> _signInManager;
-        private readonly UserManager<Domain.Accounts.Account> _userManager;
-        private readonly IUserStore<Domain.Accounts.Account> _userStore;
-        private readonly IUserEmailStore<Domain.Accounts.Account> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
+        private readonly IMediator _mediator;
 
         public RegisterModel(
-            UserManager<Domain.Accounts.Account> userManager,
-            IUserStore<Domain.Accounts.Account> userStore,
-            SignInManager<Domain.Accounts.Account> signInManager,
-            ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IMediator mediator,
+            ILogger<RegisterModel> logger)
         {
-            _userManager = userManager;
-            _userStore = userStore;
-            _emailStore = GetEmailStore();
-            _signInManager = signInManager;
+            _mediator = mediator;
             _logger = logger;
-            _emailSender = emailSender;
         }
 
         /// <summary>
@@ -62,12 +46,6 @@ namespace OnlineShop.Client.Areas.Identity.Pages.Account
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
-
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public class InputModel
         {
             /// <summary>
@@ -78,6 +56,35 @@ namespace OnlineShop.Client.Areas.Identity.Pages.Account
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
+
+            [Required]
+            [Display(Name = "User Name")]
+            public string UserName { get; set; }
+
+            [Display(Name = "Title")]
+            public string Title { get; set; }
+            [Required]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
+            [Display(Name = "Middle Name")]
+            public string MiddleName { get; set; }
+
+            [Display(Name = "Suffix")]
+            public string Suffix { get; set; }
+
+            [Display(Name = "Company")]
+            public string CompanyName { get; set; }
+
+            [Display(Name = "Sales Person")]
+            public string SalesPerson { get; set; }
+
+            [Display(Name = "Phone")]
+            public string PhoneNumber { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -103,48 +110,41 @@ namespace OnlineShop.Client.Areas.Identity.Pages.Account
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
             if (ModelState.IsValid)
             {
-                var user = CreateUser();
+                var command = new CreateAccountCommand
+                {
+                    NameStyle = false,
+                    FirstName = Input.FirstName,
+                    Email = Input.Email,
+                    LastName = Input.LastName,
+                    MiddleName = Input.MiddleName,
+                    Password = Input.Password,
+                    UserName = Input.UserName,
+                    Suffix = Input.Suffix,
+                    CompanyName = Input.CompanyName,
+                    SaleSperson = Input.SalesPerson,
+                    PhoneNumber = Input.PhoneNumber,
+                    Title = Input.Title
+                };
 
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                var result = await _userManager.CreateAsync(user, Input.Password);
-
-                if (result.Succeeded)
+                var result = await _mediator.Send(command);
+               
+                
+                if (result.Item1)
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);
-
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
-                    }
-                    else
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
-                    }
+                    return LocalRedirect(returnUrl);
+                    
                 }
-                foreach (var error in result.Errors)
+                foreach (var error in result.Item2)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
@@ -154,27 +154,6 @@ namespace OnlineShop.Client.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private Domain.Accounts.Account CreateUser()
-        {
-            try
-            {
-                return Activator.CreateInstance<Domain.Accounts.Account>();
-            }
-            catch
-            {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}'. " +
-                    $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
-                    $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
-            }
-        }
-
-        private IUserEmailStore<Domain.Accounts.Account> GetEmailStore()
-        {
-            if (!_userManager.SupportsUserEmail)
-            {
-                throw new NotSupportedException("The default UI requires a user store with email support.");
-            }
-            return (IUserEmailStore<Domain.Accounts.Account>)_userStore;
-        }
+     
     }
 }
