@@ -1,53 +1,62 @@
-﻿@page "/Edit/{productId}"
+﻿@page "/ProductCategory/Edit/{productId}"
 @using MediatR
 @using OnlineShop.Domain.ProductCategories.Commands
 @using OnlineShop.Domain.ProductCategories.Queries
 @inject IMediator Mediator;
+@inject NavigationManager NavManager;
 
-<form>
+<EditForm Model="Model" OnValidSubmit="@UpdateProductCategory">
     <div class="form-group">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
         <label for="exampleFormControlInput1">Name</label>
-        <input type="text" @bind="Name" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+        <InputText type="text" @bind-Value="Model.ProductName" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"/>
     </div>
     <div class="form-group">
-        <label for="exampleFormControlSelect1">Example select</label>
-        <select class="form-control" id="exampleFormControlSelect1">
+        <label for="exampleFormControlSelect1">Parent Category</label>
+        <InputSelect class="form-control" @bind-Value="Model.ChosenParentCategory">
             @foreach (var data in ProductCategories)
             {
                     <option>@data.Name</option>
             }
-        </select>
+            <option></option>
+        </InputSelect>
     </div>
-</form>
+    <button type="submit" class="btn btn-secondary mt-1">Submit</button>
+    <button type="button" class="btn btn-secondary mt-1" @onclick="RedirectToHome">Back</button> 
+</EditForm>
 
 @code {
     [Parameter]
     public string ProductId { get; set; }
 
     public int CurrentId { get; set; }
-
-    public int ChosenParentCategoryId
-    {
-        get; 
-        set;
-    }
-    public string Name { get; set; }
-    public List<ProductCategoryQueryResult> ProductCategories { get; set; }
+    public EditItemModel Model { get; set; } = new EditItemModel() { ChosenParentCategory = "", ProductName = "" };
+    public List<ProductCategoryQueryResult> ProductCategories { get; set; } = new List<ProductCategoryQueryResult>();
 
     protected override async Task OnInitializedAsync()
     {
         var command = new GetProductCategoryCommand() { Id = int.Parse(ProductId)};
         var result = await Mediator.Send(command);
         var secondCommand = new GetAllProductCategoriesCommand();
-        ProductCategories = await Mediator.Send(secondCommand);
 
-        Name = result.Name;
+        if (result.ParentProductCategory is not null) 
+            Model.ChosenParentCategory = result.ParentProductCategory.Name;
 
+        ProductCategories = await Mediator.Send(secondCommand) ?? new List<ProductCategoryQueryResult>();
+        Model.ProductName = result.Name;
     }
 
-    private void SetParentId(int id)
+    private void RedirectToHome()
     {
-        ChosenParentCategoryId = id;
+        NavManager.NavigateTo($"/");
+    }
+
+    private async Task UpdateProductCategory()
+    {
+        var id = ProductCategories.First(x => x.Name == Model.ChosenParentCategory).Id;
+        var command = new UpdateProductCategoryCommand() { Id = int.Parse(ProductId),Name = Model.ProductName, ParentProductCategoryId = id  };
+        await Mediator.Send(command);
     }
 
 }

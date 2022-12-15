@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using OnlineShop.Domain;
+using OnlineShop.Domain.ProductCategories.Queries;
 using OnlineShop.Persistence.Interfaces;
 using System.Collections;
 using System.Linq.Expressions;
+using System.Threading;
 
 namespace OnlineShop.Persistence.Repositories
 {
@@ -81,6 +83,40 @@ namespace OnlineShop.Persistence.Repositories
                 await IncludeProperties(toreTurn, includeProperties, cancellationToken);
 
                 return await toreTurn.ToListAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"{ex.Message}");
+            }
+        }
+        public async Task<T> GetFirstNoTrackingAsync(Expression<Func<T, bool>>? filter = null, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var toreTurn = _table.AsNoTracking().Where(filter);
+
+            if (!toreTurn.Any())
+            {
+                throw new Exception("Not found");
+            }
+
+            return await toreTurn.AsNoTracking().FirstAsync(cancellationToken);
+        }
+
+        public async Task<T> GetFirstOrDefaultNoTrackingAsync(Expression<Func<T, bool>>? filter = null, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            return await _table.AsNoTracking().FirstOrDefaultAsync(filter, cancellationToken);
+        }
+
+        public async Task<List<T>> GetWithoutTrackingAsync(Expression<Func<T, bool>>? filter = null, CancellationToken cancellationToken = default, params string[] includeProperties)
+        {
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                return await _table.AsNoTracking().ToListAsync(cancellationToken);
             }
             catch (Exception ex)
             {
@@ -165,6 +201,7 @@ namespace OnlineShop.Persistence.Repositories
                     throw new Exception("Not found");
 
                 _table.Remove(toRemove);
+                
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
             }
             catch (Exception ex)

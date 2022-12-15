@@ -19,14 +19,7 @@ namespace OnlineShop.App.CommandHandlers.ProductCategories
 
         public async Task<Unit> Handle(DeleteProductCategoryCommand request, CancellationToken cancellationToken)
         {
-
-            var check = await _repository.GetFirstAsync(x => x.Id == request.Id, cancellationToken, "Products");
-
-            if (check.Products.Any())
-                throw new AppException($"Cant delete product categories, products are not empty");
-
-            await _repository.DeleteAsync(request.Id, cancellationToken);
-
+            await _repository.DeleteProductCategoryAsync(request.Id, cancellationToken);
             return Unit.Value;
         }
     }

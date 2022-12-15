@@ -1,0 +1,40 @@
+﻿@page "/ProductCategory/View/{productId}"
+@using OnlineShop.Domain.ProductCategories.Commands
+@using MediatR
+@inject IMediator Mediator
+@inject NavigationManager NavManager
+
+<form>
+    <div class="form-group">
+        <label for="Name">Name</label>
+        <input type="text" @bind="ProductName" class="form-control" id="Name" placeholder="Name" readonly>
+    </div>
+    <div class="form-group">
+        <label for="ParentCategory">Parent Category</label>
+        <input type="text" @bind="ChosenParentCategory" class="form-control" id="ParentCategory"  placeholder="ParentCateogry" readonly>
+    </div>
+</form>
+<button type="button" class="btn btn-secondary mt-1" @onclick="RedirectToHome">Back</button> 
+@code {
+    [Parameter]
+    public string ProductId { get; set; }
+
+    public string ChosenParentCategory { get; set; }
+
+    public string ProductName { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var command = new GetProductCategoryCommand() { Id = int.Parse(ProductId) };
+        var result = await Mediator.Send(command);
+
+        if (result.ParentProductCategory is not null)
+            ChosenParentCategory = result.ParentProductCategory.Name;
+
+        ProductName = result.Name;
+    }
+    private void RedirectToHome()
+    {
+        NavManager.NavigateTo($"/");
+    }
+}

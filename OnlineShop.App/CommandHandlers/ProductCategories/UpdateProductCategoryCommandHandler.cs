@@ -19,6 +19,7 @@ namespace OnlineShop.App.CommandHandlers.ProductCategories
         public async Task<Unit> Handle(UpdateProductCategoryCommand request, CancellationToken cancellationToken)
         {
             var convert = _mapper.Map<UpdateProductCategoryCommand, ProductCategory>(request);
+            convert.ModifiedDate = DateTime.Now;
             await _repository.UpdateAsync(convert, cancellationToken);
 
             return Unit.Value;

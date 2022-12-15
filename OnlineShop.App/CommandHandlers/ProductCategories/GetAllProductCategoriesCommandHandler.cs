@@ -19,7 +19,7 @@ namespace OnlineShop.App.CommandHandlers.ProductCategories
 
         public async Task<List<ProductCategoryQueryResult>> Handle(GetAllProductCategoriesCommand request, CancellationToken cancellationToken)
         {
-            var result = await _repository.GetAsync(cancellationToken: cancellationToken);
+            var result = await _repository.GetWithoutTrackingAsync(cancellationToken: cancellationToken);
             var convert = _mapper.Map<List<ProductCategoryQueryResult>>(result);
             
             return convert;

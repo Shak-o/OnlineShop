@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using OnlineShop.Domain.ProductCategories;
 using OnlineShop.Domain.ProductCategories.Queries;
 using OnlineShop.Persistence.Interfaces;
+using System.Linq.Expressions;
 
 namespace OnlineShop.Persistence.Repositories
 {
@@ -25,6 +26,7 @@ namespace OnlineShop.Persistence.Repositories
                 var takeCount = (page + 1) * count > max ? max - maxPages * count : count;
 
                 var toReturn = await _context.ProductCategories
+                    .AsNoTracking()
                     .Skip(startIndex)
                     .Take(takeCount)
                     .Select(x => new ProductCategoryListQueryResult()
@@ -41,6 +43,31 @@ namespace OnlineShop.Persistence.Repositories
             catch (Exception ex)
             {
                 throw new Exception($"Error happened in process of reading product categories: {ex.Message}");
+            }
+        }
+
+        public async Task DeleteProductCategoryAsync(int id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var toRemove = await _context.ProductCategories.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+
+                if (toRemove is null)
+                    throw new Exception("Not found");
+
+                if (_context.ProductCategories.Any(x => x.ParentProductCategoryId == toRemove.Id))
+                    return;
+
+                if (toRemove.ParentProductCategory is not null)
+                    _context.ProductCategories.Entry(toRemove.ParentProductCategory).State = EntityState.Unchanged;
+
+                _context.ProductCategories.Remove(toRemove);
+
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error happened during update. Error:{ex.Message}");
             }
         }
     }

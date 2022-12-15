@@ -12,6 +12,18 @@
 }
 else
 {
+    if (Error.Count > 0)
+    {
+        
+        @foreach (var item in Error)
+        {
+            <div class="alert alert-danger" role="alert">
+                @item
+            </div>
+        }
+        
+    }
+   
     <table class="table">
         <thead>
         <tr>
@@ -26,7 +38,10 @@ else
             <tr>
                 <td>@product.Name</td>
                 <td>@product.ProductCount.ToString()</td>
-                <td><button type="button" class="btn btn-primary" @onclick="() => Edit(product.Id)">Edit</button> <button type="button" class="btn btn-danger">Delete</button></td>
+                <td><button type="button" class="btn btn-primary" @onclick="() => Edit(product.Id)">Edit</button> 
+                    <button type="button" class="btn btn-danger" @onclick="() => Delete(product.Id)">Delete</button>
+                    <button type="button" class="btn btn-secondary" @onclick="() => View(product.Id)">View</button>
+                    </td>
             </tr>
         }
         </tbody>
@@ -60,17 +75,42 @@ else
     public int CurrentPage { get; set; }
     public int RequestedPage { get; set; }
     public int EditId { get; set; }
+    List<string> Error { get; set; } = new List<string>();
 
     protected override async Task OnInitializedAsync()
     {
-        CurrentPage = 5;
+        CurrentPage = 0;
         var command = new GetProductCategoriesCommand() { Filter = null, Includes = null, Page = CurrentPage };
         Data = await Mediator.Send(command);
     }
 
-    private async Task Edit(int id)
+    private void Edit(int id)
     {
-        NavManager.NavigateTo($"/Edit/{id}");
-        var check = EditId;
+        NavManager.NavigateTo($"/ProductCategory/Edit/{id}");
+    }
+
+    private void View(int id)
+    {
+        NavManager.NavigateTo($"/ProductCategory/view/{id}");
+    }
+
+    private async Task Delete(int id)
+    {
+        if (Data.First(x => x.Id == id).ProductCount != 0)
+        {
+            Error.Add("You cant delete this item, Products count is not 0");
+            return;
+        }
+
+        var command = new DeleteProductCategoryCommand() { Id = id };
+        await Mediator.Send(command);
+        await Clear().ConfigureAwait(false);
+    }
+
+    private async Task Clear()
+    {
+        await Task.Delay(5000);
+        Error.Clear();
+        StateHasChanged();
     }
 }
