@@ -320,7 +320,7 @@ namespace OnlineShop.Persistence.Helpers
 
             modelBuilder.Entity<ProductModel>(entity =>
             {
-                entity.HasKey(e => e.ProductModelId).HasName("PK_ProductModel_ProductModelID");
+                entity.HasKey(e => e.Id).HasName("PK_ProductModel_ProductModelID");
 
                 entity.ToTable("ProductModel", "SalesLT");
 
@@ -330,7 +330,7 @@ namespace OnlineShop.Persistence.Helpers
 
                 entity.HasIndex(e => e.CatalogDescription, "PXML_ProductModel_CatalogDescription");
 
-                entity.Property(e => e.ProductModelId).HasColumnName("ProductModelID");
+                entity.Property(e => e.Id).HasColumnName("ProductModelID");
                 entity.Property(e => e.CatalogDescription).HasColumnType("xml");
                 entity.Property(e => e.ModifiedDate)
                     .HasDefaultValueSql("(getdate())")

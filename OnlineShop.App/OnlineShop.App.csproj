@@ -17,8 +17,4 @@
     <ProjectReference Include="..\OnlineShop.Persistence\OnlineShop.Persistence.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Mapping\Resolvers\" />
-  </ItemGroup>
-
 </Project>

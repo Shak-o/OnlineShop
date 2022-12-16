@@ -1,0 +1,144 @@
+﻿@page "/Product/Create"
+@using OnlineShop.Domain.Products.Queries
+@using OnlineShop.Domain.Products.Commands
+@using MediatR
+@using Microsoft.AspNetCore.Components
+@using OnlineShop.Domain.ProductCategories.Commands
+@using OnlineShop.Domain.ProductCategories.Queries
+@inject IMediator Mediator
+@inject NavigationManager NavManager
+
+@if (Model == null || ProductCategories == null || ProductModels == null)
+{
+    <h1>Loading...</h1>
+}
+else
+{
+    <EditForm Model="Model" OnValidSubmit="@SaveProduct">
+
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="Name">Name</label>
+            <InputText type="text" @bind-Value="Model.Name" class="form-control" id="Name" placeholder="Jhon"/>
+        </div>
+
+        <div class="form-group">
+            <label for="Color">Color</label>
+            <InputText type="text" @bind-Value="Model.Color" class="form-control" id="Color" placeholder="Red"/>
+        </div>
+
+        <div class="form-group">
+            <label for="ProductNumber">ProductNumber</label>
+            <InputText type="text" @bind-Value="Model.ProductNumber" class="form-control" id="ProductNumber" placeholder="name@example.com"/>
+        </div>
+
+        <div class="form-group">
+            <label for="SellStartDate">Sell Start Date</label>
+            <InputDate TValue="DateTime" @bind-Value="Model.SellStartDate" class="form-control" id="SellStartDate" placeholder="name@example.com"/>
+        </div>
+
+        <div class="form-group">
+            <label for="SellEndDate">Sell End Date</label>
+            <InputDate TValue="DateTime?" @bind-Value="Model.SellEndDate" class="form-control" id="SellEndDate" placeholder="name@example.com"/>
+        </div>
+
+        <div class="form-group">
+            <label for="DiscontinuedDate">Size</label>
+            <InputDate TValue="DateTime?" @bind-Value="Model.DiscontinuedDate" class="form-control" id="DiscontinuedDate" placeholder="name@example.com"/>
+        </div>
+
+        <div class="form-group">
+            <label for="Weight">Weight</label>
+            <InputNumber TValue="decimal?" @bind-Value="Model.Weight" class="form-control" id="Weight" placeholder="name@example.com"/>
+        </div>
+
+        <div class="form-group">
+            <label for="Size">Size</label>
+            <InputText @bind-Value="Model.Size" class="form-control" id="Size" placeholder="name@example.com"/>
+        </div>
+
+        <div class="form-group">
+            <label for="StandartCost">Standard Cost</label>
+            <InputNumber TValue="decimal" @bind-Value="Model.StandardCost" class="form-control" id="StandartCost" placeholder="name@example.com"/>
+        </div>
+
+        <div class="form-group">
+            <label for="ListPrice">List Price</label>
+            <InputNumber TValue="decimal" @bind-Value="Model.ListPrice" class="form-control" id="ListPirce" placeholder="name@example.com"/>
+        </div>
+        
+        <div class="form-group">
+            <label for="exampleFormControlSelect1">Parent Category</label>
+            <InputSelect class="form-control" @bind-Value="ChosenParentCategoryName">
+
+                @foreach (var data in ProductCategories)
+                {
+                    <option>@data.Name</option>
+                }
+                <option></option>
+            </InputSelect>
+        </div>
+
+        <div class="form-group">
+            <label for="exampleFormControlSelect1">Parent Category</label>
+            <InputSelect class="form-control" @bind-Value="ChosenProductModelName">
+
+                @foreach (var data in ProductModels)
+                {
+                    <option>@data.Name</option>
+                }
+                <option></option>
+            </InputSelect>
+        </div>
+        <InputFile OnChange="@SetFile"/>
+
+        <button type="submit" class="btn btn-secondary mt-1">Submit</button>
+        <button type="button" class="btn btn-secondary mt-1" @onclick="RedirectToHome">Back</button>
+    </EditForm>
+}
+
+@code {
+    public ProductQueryResult? Model { get; set; }
+    public string ChosenParentCategoryName { get; set; }
+    public string ChosenProductModelName { get; set; }
+
+    public List<ProductCategoryQueryResult>? ProductCategories { get; set; }
+    public List<ProductModelQueryResult>? ProductModels { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model = new ProductQueryResult() { SellStartDate = DateTime.Now };
+
+        ProductCategories = await Mediator.Send(new GetAllProductCategoriesCommand());
+        ProductModels = await Mediator.Send(new GetProductModelsCommand());
+        ChosenParentCategoryName = string.Empty;
+        ChosenProductModelName = string.Empty;
+    }
+
+    private async Task SaveProduct()
+    {
+        if (Model is null)
+            return;
+        Model.ProductCategoryId = ProductCategories.First(x => x.Name.Equals(ChosenParentCategoryName)).Id;
+        Model.ProductModelId = ProductModels.First(x => x.Name == ChosenProductModelName).Id;
+
+        var command = new CreateProductCommand() { Product = Model };
+        await Mediator.Send(command);
+    }
+
+    private async Task SetFile(InputFileChangeEventArgs e)
+    {
+        var file = e.File.OpenReadStream();
+        using var memStream = new MemoryStream();
+        await file.CopyToAsync(memStream);
+        Model.ThumbNailPhoto = memStream.ToArray();
+
+    }
+
+    private void RedirectToHome()
+    {
+        NavManager.NavigateTo($"/");
+    }
+}

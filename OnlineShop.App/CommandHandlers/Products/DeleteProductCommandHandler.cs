@@ -8,9 +8,9 @@ namespace OnlineShop.App.CommandHandlers.Products
 {
     public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand>
     {
-        private readonly IRepository<Product> _repository;
+        private readonly IProductRepository _repository;
 
-        public DeleteProductCommandHandler(IRepository<Product> repository)
+        public DeleteProductCommandHandler(IProductRepository repository)
         {
             _repository = repository;
         }

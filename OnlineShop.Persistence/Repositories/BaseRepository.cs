@@ -124,7 +124,7 @@ namespace OnlineShop.Persistence.Repositories
             }
         }
 
-        public async Task<List<T>> GetByPagesAsync(Expression<Func<T, bool>> filter, int page, int count, CancellationToken cancellationToken, params string[] includeProperties)
+        public async Task<List<T>> GetByPagesAsync(Expression<Func<T, bool>>? filter, int page, int count, CancellationToken cancellationToken, params string[] includeProperties)
         {
             try
             {
@@ -136,13 +136,16 @@ namespace OnlineShop.Persistence.Repositories
                 cancellationToken.ThrowIfCancellationRequested();
 
                 var toreTurn = _table
-                    .Where(filter)
+                    .AsNoTracking()
                     .OrderBy(x => x.Id)
                     .Skip(startIndex)
                     .Take(takeCount);
                 //.ToListAsync(cancellationToken);
 
-                await IncludeProperties(toreTurn, includeProperties, cancellationToken);
+                //await IncludeProperties(toreTurn, includeProperties, cancellationToken);
+
+                if (filter is not null)
+                    toreTurn = toreTurn.Where(filter);
 
                 return await toreTurn.ToListAsync(cancellationToken);
             }

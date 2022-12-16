@@ -4,9 +4,9 @@ using OnlineShop.Domain.Products;
 
 namespace OnlineShop.Domain.Models;
 
-public partial class ProductModel
+public partial class ProductModel : IBaseModel
 {
-    public int ProductModelId { get; set; }
+    public int Id { get; set; }
 
     public string Name { get; set; } = null!;
 
@@ -19,4 +19,8 @@ public partial class ProductModel
     public virtual ICollection<ProductModelProductDescription> ProductModelProductDescriptions { get; } = new List<ProductModelProductDescription>();
 
     public virtual ICollection<Product> Products { get; } = new List<Product>();
+
+    public void Dispose()
+    {
+    }
 }

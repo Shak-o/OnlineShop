@@ -3,6 +3,7 @@
 @inherits LayoutComponentBase
 @inject SignInManager<Account> SignInManager;
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavManager;
 
 <PageTitle>OnlineShop.Client</PageTitle>
 
@@ -36,4 +37,6 @@
         var user = state.User;
         return SignInManager.IsSignedIn(user);
     }
+    
 }
+

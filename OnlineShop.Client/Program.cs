@@ -15,6 +15,7 @@ using OnlineShop.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
 using OnlineShop.Client.Areas.Identity;
 using OnlineShop.Domain.Accounts;
+using OnlineShop.Domain.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,9 +28,10 @@ builder.Services.AddMediatR(typeof(Ref).Assembly);
 
 builder.Services.AddScoped<IRepository<Customer>, BaseRepository<Customer>>();
 builder.Services.AddScoped<IRepository<Address>, BaseRepository<Address>>();
-builder.Services.AddScoped<IRepository<Product>, BaseRepository<Product>>();
+builder.Services.AddScoped<IRepository<ProductModel>, BaseRepository<ProductModel>>();
 builder.Services.AddScoped<IRepository<SalesOrderHeader>, BaseRepository<SalesOrderHeader>>();
 
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomersRepository>();
 builder.Services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
 

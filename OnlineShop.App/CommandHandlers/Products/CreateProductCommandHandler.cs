@@ -9,10 +9,10 @@ namespace OnlineShop.App.CommandHandlers.Products
 {
     public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand>
     {
-        private readonly IRepository<Product> _repository;
+        private readonly IProductRepository _repository;
         private readonly IMapper _mapper;
 
-        public CreateProductCommandHandler(IRepository<Product> repository, IMapper mapper)
+        public CreateProductCommandHandler(IProductRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
@@ -22,7 +22,7 @@ namespace OnlineShop.App.CommandHandlers.Products
         {
             try
             {
-                var convert = _mapper.Map<Product>(request);
+                var convert = _mapper.Map<Product>(request.Product);
                 await _repository.AddAsync(convert, cancellationToken);
             }
             catch (Exception ex)

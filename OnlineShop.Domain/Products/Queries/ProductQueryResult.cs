@@ -1,73 +1,55 @@
-﻿using OnlineShop.Domain.ProductCategories.Queries;
+﻿using System.ComponentModel.DataAnnotations;
+using OnlineShop.Domain.ProductCategories.Queries;
 
 namespace OnlineShop.Domain.Products.Queries
 {
     public class ProductQueryResult
     {
-        /// <summary>
-        /// Name of the product.
-        /// </summary>
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(50)]
         public string Name { get; set; } = null!;
 
-        /// <summary>
-        /// Unique product identification number.
-        /// </summary>
+        [Required]
+        [StringLength(25)]
         public string ProductNumber { get; set; } = null!;
 
-        /// <summary>
-        /// Product color.
-        /// </summary>
+        [StringLength(15)]
+        [DataType(DataType.Currency)]
         public string? Color { get; set; }
 
-        /// <summary>
-        /// Standard cost of the product.
-        /// </summary>
+        [Required]
+        [DataType(DataType.Currency)]
         public decimal StandardCost { get; set; }
 
-        /// <summary>
-        /// Selling price.
-        /// </summary>
+        [Required]
         public decimal ListPrice { get; set; }
 
-        /// <summary>
-        /// Product size.
-        /// </summary>
+        [StringLength(5)]
         public string? Size { get; set; }
 
-        /// <summary>
-        /// Product weight.
-        /// </summary>
         public decimal? Weight { get; set; }
 
-        /// <summary>
-        /// Product is a member of this product category. Foreign key to ProductCategory.ProductCategoryID. 
-        /// </summary>
         public int? ProductCategoryId { get; set; }
 
-        /// <summary>
-        /// Product is a member of this product model. Foreign key to ProductModel.ProductModelID.
-        /// </summary>
         public int? ProductModelId { get; set; }
 
-        /// <summary>
-        /// Date the product was available for sale.
-        /// </summary>
+        [Required]
         public DateTime SellStartDate { get; set; }
 
-        /// <summary>
-        /// Date the product was no longer available for sale.
-        /// </summary>
+
         public DateTime? SellEndDate { get; set; }
 
         /// <summary>
         /// Date the product was discontinued.
         /// </summary>
         public DateTime? DiscontinuedDate { get; set; }
+        
+        public string ThumbNailPhotoBase64 { get; set; }
 
-        /// <summary>
-        /// Small image of the product.
-        /// </summary>
-        public byte[]? ThumbNailPhoto { get; set; }
+        [Required]
+        public byte[] ThumbNailPhoto { get; set; }
 
         public ProductCategoryQueryResult ProductCategory { get; set; }
         public ProductModelQueryResult ProductModel { get; set; }

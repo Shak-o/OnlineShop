@@ -11,11 +11,11 @@ namespace OnlineShop.App.CommandHandlers.Products
 {
     public class GetProductListCommandHandler : IRequestHandler<GetProductListCommand, List<ProductQueryResult>>
     {
-        private readonly IRepository<Product> _repository;
+        private readonly IProductRepository _repository;
         private readonly IMapper _mapper;
         private readonly IOptions<PagingOptions> _options;
 
-        public GetProductListCommandHandler(IRepository<Product> repository, IMapper mapper, IOptions<PagingOptions> options)
+        public GetProductListCommandHandler(IProductRepository repository, IMapper mapper, IOptions<PagingOptions> options)
         {
             _repository = repository;
             _mapper = mapper;

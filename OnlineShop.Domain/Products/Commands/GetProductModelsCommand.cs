@@ -3,8 +3,7 @@ using OnlineShop.Domain.Products.Queries;
 
 namespace OnlineShop.Domain.Products.Commands
 {
-    public class CreateProductCommand : IRequest
+    public class GetProductModelsCommand : IRequest<List<ProductModelQueryResult>>
     {
-        public ProductQueryResult Product { get; set; }
     }
 }

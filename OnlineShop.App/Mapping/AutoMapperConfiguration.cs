@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using OnlineShop.App.Mapping.Resolvers;
 using OnlineShop.Domain.Addresses;
 using OnlineShop.Domain.Addresses.Commands;
 using OnlineShop.Domain.Addresses.Queries;
 using OnlineShop.Domain.Customers;
 using OnlineShop.Domain.Customers.Commands;
+using OnlineShop.Domain.Models;
 using OnlineShop.Domain.ProductCategories;
 using OnlineShop.Domain.ProductCategories.Commands;
 using OnlineShop.Domain.ProductCategories.Queries;
@@ -29,11 +31,15 @@ namespace OnlineShop.App.Mapping
             CreateMap<UpdateAddressCommand, Address>();
 
             CreateMap<ProductCategory, ProductCategoryQueryResult>();
+            CreateMap<ProductCategoryQueryResult, ProductCategory>();
             CreateMap<CreateProductCategoryCommand, ProductCategory>();
             CreateMap<UpdateProductCategoryCommand, ProductCategory>();
 
-            CreateMap<Product, ProductQueryResult>();
+            CreateMap<Product, ProductQueryResult>().ForMember(x => x.ThumbNailPhotoBase64, x => x.MapFrom<PhotoResolver>());
+            CreateMap<ProductQueryResult, Product>().ForMember(x => x.ThumbNailPhoto, x => x.MapFrom<PhotoReverseResolver>());
             CreateMap<CreateProductCommand, Product>();
+            CreateMap<ProductModel, ProductModelQueryResult>();
+            CreateMap<ProductModelQueryResult, ProductModel>();
             CreateMap<UpdateProductCommand, Product>();
 
             CreateMap<SalesOrderHeader, OrderQueryResult>(); 

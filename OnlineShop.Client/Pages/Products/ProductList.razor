@@ -1,21 +1,20 @@
-﻿@page "/ProductCategory/list"
+﻿@page "/product/list"
+@using OnlineShop.Domain.Products.Queries
 @using MediatR
-@using Microsoft.AspNetCore.Mvc
-@using OnlineShop.Domain.ProductCategories.Commands
-@using OnlineShop.Domain.ProductCategories.Queries
-@inject IMediator Mediator
+@using OnlineShop.Domain.Products.Commands
+@inject IMediator Mediator;
 @inject NavigationManager NavManager;
 
-@if (Data == null)
+@if (_data == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    if (Error.Count > 0)
+    if (_errors.Count > 0)
     {
         
-        @foreach (var item in Error)
+        @foreach (var item in _errors)
         {
             <div class="alert alert-danger" role="alert">
                 @item
@@ -28,20 +27,33 @@ else
         <thead>
         <tr>
             <th>Name</th>
-            <th>Product Count</th>
+            <th>Product Number</th>
+            <th>Color</th>
+            <th>Standard Cost</th>
+            <th>Size</th>
+            <th>Weight</th>
+            <th>Sell end date</th>
+            <th>Pic</th>
             <th>Actions</th>
         </tr>
         </thead>
         <tbody>
-        @foreach (var product in Data)
+        @foreach (var product in _data)
         {
             <tr>
                 <td>@product.Name</td>
-                <td>@product.ProductCount.ToString()</td>
+                <td>@product.ProductNumber</td>
+                <td>@product.Color</td>
+                <td>@product.StandardCost</td>
+                <td>@product.Size</td>
+                <td>@product.Weight</td>
+                <td>@product.SellEndDate</td>
+                <td><img src="data:image/png;base64,@product.ThumbNailPhotoBase64" /></td>
+                
                 <td><button type="button" class="btn btn-primary" @onclick="() => Edit(product.Id)">Edit</button> 
                     <button type="button" class="btn btn-danger" @onclick="() => Delete(product.Id)">Delete</button>
                     <button type="button" class="btn btn-secondary" @onclick="() => View(product.Id)">View</button>
-                    </td>
+                </td>
             </tr>
         }
         </tbody>
@@ -73,52 +85,44 @@ else
 }
 
 @code {
-    public List<ProductCategoryListQueryResult> Data { get; set; }
-    public int MaxPages { get; set; }
-    public int CurrentPage { get; set; }
-    public int RequestedPage { get; set; }
-    public int EditId { get; set; }
-    List<string> Error { get; set; } = new List<string>();
+    private List<ProductQueryResult> _data;
+    private List<string> _errors = new List<string>();
+    private int CurrentPage { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         CurrentPage = 0;
-        var command = new GetProductCategoriesCommand() { Filter = null, Includes = null, Page = CurrentPage };
-        Data = await Mediator.Send(command);
+        var command = new GetProductListCommand() { Filter = null, Includes = null, Page = CurrentPage };
+        _data = await Mediator.Send(command);
     }
 
-    private void Edit(int id)
+    public void Edit(int id)
     {
-        NavManager.NavigateTo($"/ProductCategory/Edit/{id}");
+        NavManager.NavigateTo($"/Product/Edit/{id}");
     }
 
-    private void View(int id)
+    public void View(int id)
     {
-        NavManager.NavigateTo($"/ProductCategory/view/{id}");
-    }
-
-    private void Create()
-    {
-        NavManager.NavigateTo($"/ProductCategory/create");
+        NavManager.NavigateTo($"/Product/view/{id}");
     }
 
     private async Task Delete(int id)
     {
-        if (Data.First(x => x.Id == id).ProductCount != 0)
-        {
-            Error.Add("You cant delete this item, Products count is not 0");
-            return;
-        }
-
-        var command = new DeleteProductCategoryCommand() { Id = id };
-        await Mediator.Send(command);
-        await Clear().ConfigureAwait(false);
+        
     }
 
-    private async Task Clear()
+    public void Create()
     {
-        await Task.Delay(5000);
-        Error.Clear();
+        NavManager.NavigateTo($"/Product/create");
+    }
+
+    private async Task Check(byte[] photo)
+    {
+        var command = new GetProductCommand() { Id = 714 };
+        var memoryStream = new MemoryStream(photo);
+        
+        await using var stream = File.Create("D:\\Projects\\C#\\OnlineShop\\OnlineShop.Client\\wwwroot\\img\\test2.jpg");
+        stream.Write(photo!, 0, photo.Length);
         StateHasChanged();
     }
 }
