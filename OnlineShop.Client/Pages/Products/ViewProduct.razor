@@ -1,5 +1,113 @@
-﻿<h3>ViewProduct</h3>
+﻿@page "/Product/View/{ProductId}"
+@using OnlineShop.Domain.Products.Queries
+@using OnlineShop.Domain.Products.Commands
+@using MediatR
+@using OnlineShop.Domain.ProductCategories.Commands
+@using OnlineShop.Domain.ProductCategories.Queries
+@inject IMediator Mediator
+@inject NavigationManager NavManager
+
+@if (Model == null || ProductCategories == null || ProductModels == null)
+{
+            <h1>Loading...</h1>
+}
+else
+{
+        <EditForm Model="Model">
+
+            <div class="form-group">
+                <label for="Photo">Photo</label>
+                <img src="data:image/png;base64,@Model.ThumbNailPhotoBase64" class="img-thumbnail">
+            </div>
+
+            <div class="form-group">
+                <label for="Name">Name</label>
+                <InputText type="text" @bind-Value="Model.Name" class="form-control" id="Name" placeholder="Jhon" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label for="Color">Color</label>
+                <InputText type="text" @bind-Value="Model.Color" class="form-control" id="Color" placeholder="Red" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label for="ProductNumber">ProductNumber</label>
+                <InputText type="text" @bind-Value="Model.ProductNumber" class="form-control" id="ProductNumber" placeholder="name@example.com" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label for="SellStartDate">Sell Start Date</label>
+                <InputDate TValue="DateTime" @bind-Value="Model.SellStartDate" class="form-control" id="SellStartDate" placeholder="name@example.com" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label for="SellEndDate">Sell End Date</label>
+                <InputDate TValue="DateTime?" @bind-Value="Model.SellEndDate" class="form-control" id="SellEndDate" placeholder="name@example.com" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label for="DiscontinuedDate">Discontinued Date</label>
+                <InputDate TValue="DateTime?" @bind-Value="Model.DiscontinuedDate" class="form-control" id="DiscontinuedDate" placeholder="name@example.com" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label for="Weight">Weight</label>
+                <InputNumber TValue="decimal?" @bind-Value="Model.Weight" class="form-control" id="Weight" placeholder="name@example.com" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label for="Size">Size</label>
+                <InputText @bind-Value="Model.Size" class="form-control" id="Size" placeholder="name@example.com" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label for="StandartCost">Standard Cost</label>
+                <InputNumber TValue="decimal" @bind-Value="Model.StandardCost" class="form-control" id="StandartCost" placeholder="name@example.com" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label for="ListPrice">List Price</label>
+                <InputNumber TValue="decimal" @bind-Value="Model.ListPrice" class="form-control" id="ListPirce" placeholder="name@example.com" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">Parent Category</label>
+                <InputText class="form-control" @bind-Value="ChosenParentCategoryName" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">Parent Category</label>
+                <InputText class="form-control" @bind-Value="ChosenProductModelName" readonly/>
+            </div>
+
+            <button type="button" class="btn btn-secondary mt-1" @onclick="RedirectToHome">Back</button>
+        </EditForm>
+}
 
 @code {
+    [Parameter]
+    public string ProductId { get; set; }
 
+    public string ChosenParentCategoryName { get; set; }
+    public string ChosenProductModelName { get; set; }
+
+    public ProductQueryResult? Model { get; set; }
+    public List<ProductCategoryQueryResult>? ProductCategories { get; set; }
+    public List<ProductModelQueryResult>? ProductModels { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var command = new GetProductCommand() { Id = int.Parse(ProductId) };
+        Model = await Mediator.Send(command);
+
+        ProductCategories = await Mediator.Send(new GetAllProductCategoriesCommand());
+        ProductModels = await Mediator.Send(new GetProductModelsCommand());
+        ChosenParentCategoryName = ProductCategories.First(x => x.Id == Model.ProductCategoryId).Name;
+        ChosenProductModelName = ProductModels.First(x => x.Id == Model.ProductModelId).Name;
+    }
+
+    private void RedirectToHome()
+    {
+        NavManager.NavigateTo($"/");
+    }
 }

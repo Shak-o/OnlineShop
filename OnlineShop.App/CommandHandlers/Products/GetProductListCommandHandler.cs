@@ -26,8 +26,7 @@ namespace OnlineShop.App.CommandHandlers.Products
         {
             try
             {
-                var result = await _repository.GetByPagesAsync(request.Filter, request.Page, _options.Value.Count,
-                    cancellationToken, request.Includes);
+                var result = await _repository.GetAllProductsAsync(request.Page, _options.Value.Count);
                 var convert = _mapper.Map<List<ProductQueryResult>>(result);
 
                 return convert;

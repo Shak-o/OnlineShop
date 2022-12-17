@@ -2,7 +2,7 @@
 
 namespace OnlineShop.Domain.Products.Commands
 {
-    public class DeleteProductCommand : IRequest
+    public class DeleteProductCommand : IRequest<bool>
     {
         public int Id { get; set; }
     }

@@ -51,6 +51,7 @@ namespace OnlineShop.Domain.Products.Queries
         [Required]
         public byte[] ThumbNailPhoto { get; set; }
 
+        public int OrderCount { get; set; }
         public ProductCategoryQueryResult ProductCategory { get; set; }
         public ProductModelQueryResult ProductModel { get; set; }
     }

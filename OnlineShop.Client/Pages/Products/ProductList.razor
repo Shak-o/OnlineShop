@@ -30,9 +30,9 @@ else
             <th>Product Number</th>
             <th>Color</th>
             <th>Standard Cost</th>
-            <th>Size</th>
             <th>Weight</th>
             <th>Sell end date</th>
+            <th>Order count</th>
             <th>Pic</th>
             <th>Actions</th>
         </tr>
@@ -45,11 +45,10 @@ else
                 <td>@product.ProductNumber</td>
                 <td>@product.Color</td>
                 <td>@product.StandardCost</td>
-                <td>@product.Size</td>
                 <td>@product.Weight</td>
                 <td>@product.SellEndDate</td>
+                <td>@product.OrderCount.ToString()</td>
                 <td><img src="data:image/png;base64,@product.ThumbNailPhotoBase64" /></td>
-                
                 <td><button type="button" class="btn btn-primary" @onclick="() => Edit(product.Id)">Edit</button> 
                     <button type="button" class="btn btn-danger" @onclick="() => Delete(product.Id)">Delete</button>
                     <button type="button" class="btn btn-secondary" @onclick="() => View(product.Id)">View</button>
@@ -108,7 +107,18 @@ else
 
     private async Task Delete(int id)
     {
-        
+        var command = new DeleteProductCommand() { Id = id };
+        var result =  await Mediator.Send(command);
+
+        if (!result)
+        {
+            _errors.Add("Can't delete product");
+        }
+        else
+        {
+            _data.Remove(_data.First(x => x.Id == id));
+        }
+        StateHasChanged();
     }
 
     public void Create()
