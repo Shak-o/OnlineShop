@@ -22,7 +22,7 @@ namespace OnlineShop.App.CommandHandlers.Orders
         {
             try
             {
-                var convert = _mapper.Map<SalesOrderHeader>(request);
+                var convert = _mapper.Map<SalesOrderHeader>(request.Order);
                 await _repository.AddAsync(convert, cancellationToken);
             }
             catch (Exception ex)

@@ -378,7 +378,7 @@ namespace OnlineShop.Persistence.Helpers
 
             modelBuilder.Entity<SalesOrderDetail>(entity =>
             {
-                entity.HasKey(e => new { e.SalesOrderId, e.SalesOrderDetailId }).HasName("PK_SalesOrderDetail_SalesOrderID_SalesOrderDetailID");
+                entity.HasKey(e => new { e.Id, e.SalesOrderDetailId }).HasName("PK_SalesOrderDetail_SalesOrderID_SalesOrderDetailID");
 
                 entity.ToTable("SalesOrderDetail", "SalesLT", tb =>
                 {
@@ -390,7 +390,7 @@ namespace OnlineShop.Persistence.Helpers
 
                 entity.HasIndex(e => e.ProductId, "IX_SalesOrderDetail_ProductID");
 
-                entity.Property(e => e.SalesOrderId)
+                entity.Property(e => e.Id)
                     .HasComment("Primary key. Foreign key to SalesOrderHeader.SalesOrderID.")
                     .HasColumnName("SalesOrderID");
                 entity.Property(e => e.SalesOrderDetailId)
@@ -424,7 +424,7 @@ namespace OnlineShop.Persistence.Helpers
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
 
-                entity.HasOne(d => d.SalesOrder).WithMany(p => p.SalesOrderDetails).HasForeignKey(d => d.SalesOrderId);
+                entity.HasOne(d => d.SalesOrder).WithMany(p => p.SalesOrderDetails).HasForeignKey(d => d.Id);
             });
 
             modelBuilder.Entity<SalesOrderHeader>(entity =>

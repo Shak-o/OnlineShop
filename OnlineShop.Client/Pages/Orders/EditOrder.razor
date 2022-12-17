@@ -1,0 +1,158 @@
+﻿@page "/Order/Edit/{OrderId}"
+@using OnlineShop.Domain.SalesOrderHeaders.Queries
+@using OnlineShop.Domain.SalesOrderHeaders.Commands
+@using MediatR
+@using OnlineShop.Domain.Customers
+@using OnlineShop.Domain.Customers.Commands
+@using OnlineShop.Domain.Customers.Queries
+@using OnlineShop.Domain.Models
+@using OnlineShop.Domain.Products.Commands
+@using OnlineShop.Domain.Products.Queries
+@inject IMediator Mediator
+@inject NavigationManager NavManager;
+
+@if (Model == null || Customers == null || Products == null)
+{
+    <h1>Loading...</h1>
+}
+else
+{
+    <EditForm Model="Model" OnValidSubmit="@SaveOrder">
+
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        
+        
+        <div class="form-group">
+            <label for="OrderDate">OrderDate</label>
+            <InputDate TValue="DateTime" @bind-Value="Model.OrderDate" class="form-control" id="OrderDate" placeholder="Jhon"/>
+        </div>
+        
+        <div class="form-group">
+            <label for="DueDate">DueDate</label>
+            <InputDate TValue="DateTime" @bind-Value="Model.DueDate" class="form-control" id="DueDate" placeholder="Jhon"/>
+        </div>
+        
+        <div class="form-group">
+            <label for="ShipDate">ShipDate</label>
+            <InputDate TValue="DateTime?" @bind-Value="Model.ShipDate" class="form-control" id="ShipDate" placeholder="Jhon"/>
+        </div>
+
+        <div class="form-group">
+            <label for="OnlineOrderFlag">OnlineOrderFlag</label>
+            <InputCheckbox type="checkbox" @bind-Value="Model.OnlineOrderFlag" class="form-check-input" id="OnlineOrderFlag" placeholder="Jhon"/>
+        </div>
+        
+        <div class="form-group">
+            <label for="AccountNumber">AccountNumber</label>
+            <InputText type="text" @bind-Value="Model.AccountNumber" class="form-control" id="AccountNumber" placeholder="Jhon"/>
+        </div>
+        
+        <div class="form-group">
+            <label for="CustomerID">CustomerId</label>
+            <InputSelect class="form-control" @bind-Value="Model.CustomerId">
+                @foreach (var data in Customers)
+                {
+                    <option>@data.Id.ToString()</option>
+                }
+            </InputSelect>
+        </div>
+            
+
+        @for (int test = 0; test < Model.SalesOrderDetails.Count; test++)
+        {
+           
+            <div class="form-group">
+                <label for="CustomerID">ProductId</label>
+                <InputSelect class="form-control" @bind-Value="Model.SalesOrderDetails[test].ProductId">
+                    @foreach (var data in Products)
+                    {
+                        <option>@data.Id.ToString()</option>
+                    }
+                </InputSelect>
+            </div>
+
+            <div class="form-group">
+                <label for="AccountNumber">OrderQty</label>
+                <InputNumber TValue="short" type="text" @bind-Value="Model.SalesOrderDetails[test].OrderQty" class="form-control" id="AccountNumber" placeholder="Jhon"/>
+            </div>
+            
+            <div class="form-group">
+                <label for="AccountNumber">UnitPrice</label>
+                <InputNumber TValue="decimal" type="text" @bind-Value="Model.SalesOrderDetails[test].UnitPrice" class="form-control" id="AccountNumber" placeholder="Jhon"/>
+            </div>
+            
+            <div class="form-group">
+                <label for="AccountNumber">AccountNumber</label>
+                <InputNumber TValue="decimal" type="text" @bind-Value="Model.SalesOrderDetails[test].UnitPriceDiscount" class="form-control" id="AccountNumber" placeholder="Jhon"/>
+            </div>
+            
+            <div class="form-group">
+                <label for="AccountNumber">AccountNumber</label>
+                <InputNumber TValue="decimal" type="text" @bind-Value="Model.SalesOrderDetails[test].LineTotal" class="form-control" id="AccountNumber" placeholder="Jhon"/>
+            </div>
+
+            <button type="button" class="btn btn-danger mt-1">Remove</button>
+
+            <hr/>
+            @if (test == Model.SalesOrderDetails.Count - 1)
+            {
+                break;
+            }
+        }
+        
+        <button type="button" class="btn btn-success mt-1"@onclick="AddSalesDetail" >Add</button>
+
+        <div class="form-group">
+            <label for="CustomerId">ShippingAddressId</label>
+            <InputNumber TValue="int?" type="text" @bind-Value="Model.ShipToAddressId" class="form-control" id="CustomerId" placeholder="Jhon"/>
+        </div>
+    
+        <div class="form-group">
+            <label for="CustomerId">BillingAddressId</label>
+            <InputNumber TValue="int?" type="text" @bind-Value="Model.BillToAddressId" class="form-control" id="CustomerId" placeholder="Jhon"/>
+        </div>
+        
+        <button type="submit" class="btn btn-success mt-1">Submit</button>
+        <button type="button" class="btn btn-secondary mt-1" @onclick="RedirectToHome">Back</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public string OrderId { get; set; }
+    public OrderQueryResult? Model { get; set; }
+    public List<CustomerQuery>? Customers { get; set; }
+    public List<ProductQueryResult>? Products { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var command = new GetOrderCommand() { Id = int.Parse(OrderId) };
+        Model = await Mediator.Send(command);
+
+        Customers = await Mediator.Send(new GetCustomersCommand() { Page = 0 });
+        Customers.Add(Model.Customer);
+        Products = await Mediator.Send(new GetProductListCommand() { Page = 0 });
+        Products.AddRange(Model.SalesOrderDetails.Select(x => new ProductQueryResult() {Id = x.ProductId}));
+    }
+
+    private async Task SaveOrder()
+    {
+        var command = new UpdateOrderCommand() { Order = Model };
+        await Mediator.Send(command);
+    }
+
+    private void RedirectToHome()
+    {
+        NavManager.NavigateTo($"/Orders/list");
+    }
+
+    private void AddSalesDetail()
+    {
+        Model.SalesOrderDetails.Add(new SalesOrderDetailQueryResult());
+        StateHasChanged();
+    }
+
+   
+}

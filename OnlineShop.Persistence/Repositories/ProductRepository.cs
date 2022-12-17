@@ -90,7 +90,7 @@ namespace OnlineShop.Persistence.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error happened in process of reading product categories: {ex.Message}");
+                throw new Exception($"Error happened in process of reading product: {ex.Message}");
             }
         }
     }

@@ -1,0 +1,111 @@
+﻿@page "/Order/View/{OrderId}"
+@using OnlineShop.Domain.SalesOrderHeaders.Queries
+@using OnlineShop.Domain.SalesOrderHeaders.Commands
+@using MediatR
+@inject IMediator Mediator
+@inject NavigationManager NavManager;
+
+@if (Model == null)
+{
+        <h1>Loading...</h1>
+}
+else
+{
+    <EditForm Model="Model">
+
+        <div class="form-group">
+            <label for="OrderDate">OrderDate</label>
+            <InputDate TValue="DateTime" @bind-Value="Model.OrderDate" class="form-control" id="OrderDate" placeholder="Jhon" readonly/>
+        </div>
+
+        <div class="form-group">
+            <label for="DueDate">DueDate</label>
+                <InputDate TValue="DateTime" @bind-Value="Model.DueDate" class="form-control" id="DueDate" placeholder="Jhon" readonly/>
+        </div>
+
+        <div class="form-group">
+            <label for="ShipDate">ShipDate</label>
+                <InputDate TValue="DateTime?" @bind-Value="Model.ShipDate" class="form-control" id="ShipDate" placeholder="Jhon" readonly/>
+        </div>
+
+        <div class="form-group">
+            <label for="OnlineOrderFlag">OnlineOrderFlag</label>
+                <InputCheckbox type="checkbox" @bind-Value="Model.OnlineOrderFlag" class="form-check-input" id="OnlineOrderFlag" placeholder="Jhon" readonly/>
+        </div>
+
+        <div class="form-group">
+            <label for="AccountNumber">AccountNumber</label>
+                <InputText type="text" @bind-Value="Model.AccountNumber" class="form-control" id="AccountNumber" placeholder="Jhon" readonly/>
+        </div>
+
+        <div class="form-group">
+            <label for="CustomerID">CustomerId</label>
+                <InputNumber class="form-control" @bind-Value="Model.CustomerId" readonly/>
+        </div>
+
+
+    @for (int test = 0; test < Model.SalesOrderDetails.Count; test++)
+    {
+
+                <div class="form-group">
+                    <label for="CustomerID">ProductId</label>
+                    <InputNumber class="form-control" @bind-Value="Model.SalesOrderDetails[test].ProductId" readonly/>
+                </div>
+
+                <div class="form-group">
+                    <label for="AccountNumber">OrderQty</label>
+                            <InputNumber TValue="short" type="text" @bind-Value="Model.SalesOrderDetails[test].OrderQty" class="form-control" id="AccountNumber" placeholder="Jhon" readonly/>
+                </div>
+
+                <div class="form-group">
+                    <label for="AccountNumber">UnitPrice</label>
+                            <InputNumber TValue="decimal" type="text" @bind-Value="Model.SalesOrderDetails[test].UnitPrice" class="form-control" id="AccountNumber" placeholder="Jhon" readonly/>
+                </div>
+
+                <div class="form-group">
+                    <label for="AccountNumber">AccountNumber</label>
+                            <InputNumber TValue="decimal" type="text" @bind-Value="Model.SalesOrderDetails[test].UnitPriceDiscount" class="form-control" id="AccountNumber" placeholder="Jhon" readonly/>
+                </div>
+
+                <div class="form-group">
+                    <label for="AccountNumber">AccountNumber</label>
+                            <InputNumber TValue="decimal" type="text" @bind-Value="Model.SalesOrderDetails[test].LineTotal" class="form-control" id="AccountNumber" placeholder="Jhon" readonly/>
+                </div>
+
+        <hr/>
+        @if (test == Model.SalesOrderDetails.Count - 1)
+        {
+            break;
+        }
+    }
+
+        <div class="form-group">
+            <label for="CustomerId">ShippingAddressId</label>
+                <InputNumber TValue="int?" type="text" @bind-Value="Model.ShipToAddressId" class="form-control" id="CustomerId" placeholder="Jhon" readonly/>
+        </div>
+
+        <div class="form-group">
+            <label for="CustomerId">BillingAddressId</label>
+                <InputNumber TValue="int?" type="text" @bind-Value="Model.BillToAddressId" class="form-control" id="CustomerId" placeholder="Jhon" readonly/>
+        </div>
+
+        <button type="button" class="btn btn-secondary mt-1" @onclick="RedirectToHome">Back</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public string OrderId { get; set; }
+    public OrderQueryResult? Model { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var command = new GetOrderCommand() { Id = int.Parse(OrderId) };
+        Model = await Mediator.Send(command);
+    }
+
+    private void RedirectToHome()
+    {
+        NavManager.NavigateTo($"/Orders/list");
+    }
+}

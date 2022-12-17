@@ -21,7 +21,7 @@ namespace OnlineShop.App.CommandHandlers.Orders
         {
             try
             {
-                var convert = _mapper.Map<SalesOrderHeader>(request);
+                var convert = _mapper.Map<SalesOrderHeader>(request.Order);
                 await _repository.UpdateAsync(convert, cancellationToken);
             }
             catch (Exception ex)

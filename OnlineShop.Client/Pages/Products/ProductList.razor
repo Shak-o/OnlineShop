@@ -125,14 +125,4 @@ else
     {
         NavManager.NavigateTo($"/Product/create");
     }
-
-    private async Task Check(byte[] photo)
-    {
-        var command = new GetProductCommand() { Id = 714 };
-        var memoryStream = new MemoryStream(photo);
-        
-        await using var stream = File.Create("D:\\Projects\\C#\\OnlineShop\\OnlineShop.Client\\wwwroot\\img\\test2.jpg");
-        stream.Write(photo!, 0, photo.Length);
-        StateHasChanged();
-    }
 }

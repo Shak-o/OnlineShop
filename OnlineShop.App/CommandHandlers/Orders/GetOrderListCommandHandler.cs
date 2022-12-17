@@ -11,11 +11,11 @@ namespace OnlineShop.App.CommandHandlers.Orders
 {
     public class GetOrderListCommandHandler : IRequestHandler<GetOrderListCommand, List<OrderListQueryResult>>
     {
-        private readonly IRepository<SalesOrderHeader> _repository;
+        private readonly IOrdersRepository _repository;
         private readonly IMapper _mapper;
         private readonly IOptions<PagingOptions> _options;
 
-        public GetOrderListCommandHandler(IRepository<SalesOrderHeader> repository, IMapper mapper, IOptions<PagingOptions> options)
+        public GetOrderListCommandHandler(IOrdersRepository repository, IMapper mapper, IOptions<PagingOptions> options)
         {
             _repository = repository;
             _mapper = mapper;
@@ -26,8 +26,7 @@ namespace OnlineShop.App.CommandHandlers.Orders
         {
             try
             {
-                var result = await _repository.GetByPagesAsync(request.Filter, request.Page, _options.Value.Count,
-                    cancellationToken);
+                var result = await _repository.GetSalesAsync(request.Page, _options.Value.Count);
 
                 var convert = _mapper.Map<List<OrderListQueryResult>>(result);
                 return convert;

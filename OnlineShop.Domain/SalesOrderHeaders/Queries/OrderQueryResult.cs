@@ -1,55 +1,34 @@
-﻿namespace OnlineShop.Domain.SalesOrderHeaders.Queries
+﻿using System.ComponentModel.DataAnnotations;
+using OnlineShop.Domain.Addresses.Queries;
+using OnlineShop.Domain.Customers.Queries;
+
+namespace OnlineShop.Domain.SalesOrderHeaders.Queries
 {
     public class OrderQueryResult
     {
-        /// <summary>
-        /// Incremental number to track changes to the sales order over time.
-        /// </summary>
+        public int Id { get; set; }
+
+        [Required]
         public byte RevisionNumber { get; set; }
 
-        /// <summary>
-        /// Dates the sales order was created.
-        /// </summary>
+        [Required]
         public DateTime OrderDate { get; set; }
 
-        /// <summary>
-        /// Date the order is due to the customer.
-        /// </summary>
+        [Required]
         public DateTime DueDate { get; set; }
 
-        /// <summary>
-        /// Date the order was shipped to the customer.
-        /// </summary>
         public DateTime? ShipDate { get; set; }
 
-        /// <summary>
-        /// Order current status. 1 = In process; 2 = Approved; 3 = Backordered; 4 = Rejected; 5 = Shipped; 6 = Cancelled
-        /// </summary>
+        [Required]
         public byte Status { get; set; }
 
-        /// <summary>
-        /// 0 = Order placed by sales person. 1 = Order placed online by customer.
-        /// </summary>
-        public bool? OnlineOrderFlag { get; set; }
+        [Required]
+        public bool OnlineOrderFlag { get; set; }
 
-        /// <summary>
-        /// Unique sales order identification number.
-        /// </summary>
-        public string SalesOrderNumber { get; set; } = null!;
 
-        /// <summary>
-        /// Customer purchase order number reference. 
-        /// </summary>
-        public string? PurchaseOrderNumber { get; set; }
-
-        /// <summary>
-        /// Financial accounting number reference.
-        /// </summary>
         public string? AccountNumber { get; set; }
 
-        /// <summary>
-        /// Customer identification number. Foreign key to Customer.CustomerID.
-        /// </summary>
+        [Required]
         public int CustomerId { get; set; }
 
         /// <summary>
@@ -62,34 +41,23 @@
         /// </summary>
         public int? BillToAddressId { get; set; }
 
-        /// <summary>
-        /// Shipping method. Foreign key to ShipMethod.ShipMethodID.
-        /// </summary>
+        [Required]
+        [StringLength(50)]
         public string ShipMethod { get; set; } = null!;
 
-        /// <summary>
-        /// Approval code provided by the credit card company.
-        /// </summary>
+        [StringLength(15)]
         public string? CreditCardApprovalCode { get; set; }
 
-        /// <summary>
-        /// Sales subtotal. Computed as SUM(SalesOrderDetail.LineTotal)for the appropriate SalesOrderID.
-        /// </summary>
+        [Required]
         public decimal SubTotal { get; set; }
 
-        /// <summary>
-        /// Tax amount.
-        /// </summary>
+        [Required]
         public decimal TaxAmt { get; set; }
 
-        /// <summary>
-        /// Shipping cost.
-        /// </summary>
+        [Required]
         public decimal Freight { get; set; }
 
-        /// <summary>
-        /// Total due from customer. Computed as Subtotal + TaxAmt + Freight.
-        /// </summary>
+        [Required]
         public decimal TotalDue { get; set; }
 
         /// <summary>
@@ -97,9 +65,12 @@
         /// </summary>
         public string? Comment { get; set; }
 
-        /// <summary>
-        /// Date and time the record was last updated.
-        /// </summary>
-        public DateTime ModifiedDate { get; set; }
+        public virtual AddressQuery? BillToAddress { get; set; }
+
+        public virtual CustomerQuery Customer { get; set; } = null!;
+
+        public virtual List<SalesOrderDetailQueryResult> SalesOrderDetails { get; set; } = new List<SalesOrderDetailQueryResult>();
+
+        public virtual AddressQuery? ShipToAddress { get; set; }
     }
 }

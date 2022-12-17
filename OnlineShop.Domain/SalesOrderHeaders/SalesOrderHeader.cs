@@ -37,7 +37,7 @@ public partial class SalesOrderHeader : IBaseModel, IDisposable
     /// <summary>
     /// 0 = Order placed by sales person. 1 = Order placed online by customer.
     /// </summary>
-    public bool? OnlineOrderFlag { get; set; }
+    public bool OnlineOrderFlag { get; set; }
 
     /// <summary>
     /// Unique sales order identification number.

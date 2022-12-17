@@ -1,32 +1,30 @@
-﻿namespace OnlineShop.Domain.Addresses.Queries
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace OnlineShop.Domain.Addresses.Queries
 {
     public class AddressQuery
     {
-        /// <summary>
-        /// First street address line.
-        /// </summary>
+        [Required]
+        [StringLength(60)]
         public string AddressLine1 { get; set; } = null!;
 
-        /// <summary>
-        /// Second street address line.
-        /// </summary>
+        [StringLength(60)]
         public string? AddressLine2 { get; set; }
 
-        /// <summary>
-        /// Name of the city.
-        /// </summary>
+        [Required]
+        [StringLength(30)]
         public string City { get; set; } = null!;
 
-        /// <summary>
-        /// Name of state or province.
-        /// </summary>
+        [Required]
+        [StringLength(50)]
         public string StateProvince { get; set; } = null!;
-
+     
+        [Required]
+        [StringLength(50)]
         public string CountryRegion { get; set; } = null!;
 
-        /// <summary>
-        /// Postal code for the street address.
-        /// </summary>
+        [Required]
+        [StringLength(15)]
         public string PostalCode { get; set; } = null!;
 
         /// <summary>

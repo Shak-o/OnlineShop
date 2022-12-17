@@ -36,6 +36,7 @@ namespace OnlineShop.Persistence.Repositories
                     .Take(takeCount)
                     .Select(customer => new CustomerQuery()
                     {
+                        Id = customer.Id,
                         CompanyName = customer.CompanyName,
                         EmailAddress = customer.EmailAddress,
                         FirstName = customer.FirstName,

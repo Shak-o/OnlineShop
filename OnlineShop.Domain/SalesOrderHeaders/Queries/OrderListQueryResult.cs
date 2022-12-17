@@ -2,6 +2,7 @@
 {
     public class OrderListQueryResult
     {
+        public int Id { get; set; }
         /// <summary>
         /// Dates the sales order was created.
         /// </summary>
@@ -21,7 +22,7 @@
         /// Customer identification number. Foreign key to Customer.CustomerID.
         /// </summary>
         public int CustomerId { get; set; }
-
+        public string CustomerName { get; set; }
         /// <summary>
         /// The ID of the location to send goods.  Foreign key to the Address table.
         /// </summary>

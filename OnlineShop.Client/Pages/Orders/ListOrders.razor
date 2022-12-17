@@ -1,0 +1,118 @@
+﻿@page "/Orders/List"
+@using MediatR
+@using OnlineShop.Domain.SalesOrderHeaders.Commands
+@using OnlineShop.Domain.SalesOrderHeaders.Queries
+@using System.Globalization
+@inject IMediator Mediator;
+@inject NavigationManager NavManager;
+
+@if (_data == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    if (_errors.Count > 0)
+    {
+        
+        @foreach (var item in _errors)
+        {
+            <div class="alert alert-danger" role="alert">
+                @item
+            </div>
+        }
+        
+    }
+   
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Order Date</th>
+            <th>DueDate</th>
+            <th>Status</th>
+            <th>CustomerName</th>
+            <th>Subtotal</th>
+            <th>TotalDue</th>
+            <th>Comment</th>
+            <th>ModifiedDate</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var order in _data)
+        {
+            <tr>
+                <td>@order.OrderDate</td>
+                <td>@order.DueDate</td>
+                <td>@order.Status.ToString()</td>
+                <td>@order.CustomerName</td>
+                <td>@order.SubTotal.ToString(CultureInfo.InvariantCulture)</td>
+                <td>@order.TotalDue.ToString(CultureInfo.InvariantCulture)</td>
+                <td>@order.Comment</td>
+                <td>@order.ModifiedDate</td>
+                <td><button type="button" class="btn btn-primary" @onclick="() => Edit(order.Id)">Edit</button> 
+                    <button type="button" class="btn btn-danger" @onclick="() => Delete(order.Id)">Delete</button>
+                    <button type="button" class="btn btn-secondary" @onclick="() => View(order.Id)">View</button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <button type="button" class="btn btn-success" @onclick="Create">Create</button>
+
+    <nav aria-label="...">
+        <ul class="pagination">
+            @if (CurrentPage < 3)
+            {
+
+            }
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">Previous</a>
+            </li>
+
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item active">
+                <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+
+}
+
+
+@code {
+    public int CurrentPage { get; set; }
+    private List<OrderListQueryResult>? _data;
+    private List<string> _errors = new List<string>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        CurrentPage = 0;
+        var command = new GetOrderListCommand() { Page = CurrentPage };
+        _data = await Mediator.Send(command);
+    }
+    public void Edit(int id)
+    {
+        NavManager.NavigateTo($"/Order/Edit/{id}");
+    }
+
+    public void View(int id)
+    {
+        NavManager.NavigateTo($"/Order/view/{id}");
+    }
+
+    private async Task Delete(int id)
+    {
+      
+    }
+
+    public void Create()
+    {
+        NavManager.NavigateTo($"/Order/create");
+    }
+}

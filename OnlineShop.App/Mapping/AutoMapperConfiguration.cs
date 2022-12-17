@@ -5,6 +5,7 @@ using OnlineShop.Domain.Addresses.Commands;
 using OnlineShop.Domain.Addresses.Queries;
 using OnlineShop.Domain.Customers;
 using OnlineShop.Domain.Customers.Commands;
+using OnlineShop.Domain.Customers.Queries;
 using OnlineShop.Domain.Models;
 using OnlineShop.Domain.ProductCategories;
 using OnlineShop.Domain.ProductCategories.Commands;
@@ -23,6 +24,7 @@ namespace OnlineShop.App.Mapping
         public AutoMapperConfiguration()
         {
             CreateMap<CreateCustomerCommand, Customer>();
+            CreateMap<Customer, CustomerQuery>();
             CreateMap<UpdateCustomerCommand, Customer>();
 
             CreateMap<Address, AddressQuery>();
@@ -46,6 +48,8 @@ namespace OnlineShop.App.Mapping
             CreateMap<SalesOrderHeader, OrderListQueryResult>(); 
             CreateMap<CreateOrderCommand, SalesOrderHeader>(); 
             CreateMap<UpdateOrderCommand, SalesOrderHeader>();
+            CreateMap<SalesOrderDetail, SalesOrderDetailQueryResult>();
+            CreateMap<SalesOrderDetailQueryResult, SalesOrderDetail>();
         }
     }
 }

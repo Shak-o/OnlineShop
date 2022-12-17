@@ -4,18 +4,16 @@ using Microsoft.EntityFrameworkCore;
 using OnlineShop.App;
 using OnlineShop.App.Mapping;
 using OnlineShop.App.Options;
+using OnlineShop.Client.Areas.Identity;
 using OnlineShop.Client.Data;
+using OnlineShop.Domain.Accounts;
 using OnlineShop.Domain.Addresses;
 using OnlineShop.Domain.Customers;
-using OnlineShop.Domain.Products;
+using OnlineShop.Domain.Models;
 using OnlineShop.Domain.SalesOrderHeaders;
 using OnlineShop.Persistence;
 using OnlineShop.Persistence.Interfaces;
 using OnlineShop.Persistence.Repositories;
-using Microsoft.AspNetCore.Identity;
-using OnlineShop.Client.Areas.Identity;
-using OnlineShop.Domain.Accounts;
-using OnlineShop.Domain.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +31,7 @@ builder.Services.AddScoped<IRepository<SalesOrderHeader>, BaseRepository<SalesOr
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomersRepository>();
+builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
 builder.Services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
 
 builder.Services.AddDbContext<ShopDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -79,6 +78,6 @@ app.UseAuthorization();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
-app.UseAuthentication();;
+app.UseAuthentication(); ;
 
 app.Run();

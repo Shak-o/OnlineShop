@@ -10,10 +10,10 @@ namespace OnlineShop.App.CommandHandlers.Orders
 {
     public class GetOrderCommandHandler : IRequestHandler<GetOrderCommand, OrderQueryResult>
     {
-        private readonly IRepository<SalesOrderHeader> _repository;
+        private readonly IOrdersRepository _repository;
         private readonly IMapper _mapper;
 
-        public GetOrderCommandHandler(IRepository<SalesOrderHeader> repository, IMapper mapper)
+        public GetOrderCommandHandler(IOrdersRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
@@ -23,14 +23,9 @@ namespace OnlineShop.App.CommandHandlers.Orders
         {
             try
             {
-                var result = await _repository.GetFirstAsync(
-                    x => request.Id == x.Id,
-                    cancellationToken, 
-                    "Customer",
-                    "ShipAddress");
+                var result = await _repository.GetOrderAsync(request.Id);
 
-                var convert = _mapper.Map<OrderQueryResult>(result);
-                return convert;
+                return result;
             }
             catch (Exception ex)
             {

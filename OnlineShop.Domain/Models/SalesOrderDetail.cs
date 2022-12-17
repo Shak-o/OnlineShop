@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using OnlineShop.Domain.Products;
+﻿using OnlineShop.Domain.Products;
 using OnlineShop.Domain.SalesOrderHeaders;
 
 namespace OnlineShop.Domain.Models;
@@ -10,11 +8,6 @@ namespace OnlineShop.Domain.Models;
 /// </summary>
 public partial class SalesOrderDetail : IBaseModel
 {
-    /// <summary>
-    /// Primary key. Foreign key to SalesOrderHeader.SalesOrderID.
-    /// </summary>
-    public int SalesOrderId { get; set; }
-
     /// <summary>
     /// Primary key. One incremental unique number per product sold.
     /// </summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,33 +11,39 @@ namespace OnlineShop.Domain.Customers.Queries
     public class CustomerQuery
     {
         public int Id { get; set; }
-        /// <summary>
-        /// First name of the person.
-        /// </summary>
+
+        public string AccountId { get; set; }
+
+        [StringLength(8)]
+        public string? Title { get; set; }
+
+        [Required]
+        [StringLength(50)]
         public string FirstName { get; set; } = null!;
 
-        /// <summary>
-        /// Middle name
-        /// </summary>
+        [StringLength(50)]
+        public string MiddleName { get; set; } = null!;
+
         public string? Password { get; set; }
-        /// <summary>
-        /// Last name of the person.
-        /// </summary>
+        
+        [Required]
+        [StringLength(50)]
         public string LastName { get; set; } = null!;
 
-        /// <summary>
-        /// The customer&apos;s organization.
-        /// </summary>
+        [StringLength(10)]
+        public string? Suffix { get; set; }
+
+        [StringLength(128)]
         public string? CompanyName { get; set; }
 
-        /// <summary>
-        /// E-mail address for the person.
-        /// </summary>
-        public string? EmailAddress { get; set; }
+        [StringLength(256)]
+        public string? SalesPerson { get; set; }
 
-        /// <summary>
-        /// Phone number associated with the person.
-        /// </summary>
+        [Required]
+        [StringLength(50)]
+        public string EmailAddress { get; set; }
+
+        [StringLength(25)]
         public string? Phone { get; set; }
 
         /// <summary>
