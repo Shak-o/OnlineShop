@@ -55,5 +55,38 @@ namespace OnlineShop.Persistence.Repositories
                 throw new Exception($"{ex.Message}");
             }
         }
+
+        public async Task<CustomerQuery> GetCustomerAsync(int id)
+        {
+            try
+            {
+                var toReturn = _context.Customers
+                    .AsNoTracking()
+                    .Where(x => x.Id == id)
+                    .Select(x => new CustomerQuery
+                    {
+                        Id = x.Id,
+                        AccountId = x.AccountId,
+                        Title = x.Title,
+                        FirstName = x.FirstName,
+                        MiddleName = x.MiddleName,
+                        Password = "*",
+                        LastName = x.LastName,
+                        Suffix = x.Suffix,
+                        CompanyName = x.CompanyName,
+                        SalesPerson = x.SalesPerson,
+                        EmailAddress = x.EmailAddress,
+                        Phone = x.Phone,
+                        NumberOfAddresses = x.CustomerAddresses.Count,
+                        Addresses = _mapper.Map<List<AddressQuery>>(x.CustomerAddresses.Select(x => x.Address))
+                    });
+
+                return await toReturn.FirstAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception();
+            }
+        }
     }
 }

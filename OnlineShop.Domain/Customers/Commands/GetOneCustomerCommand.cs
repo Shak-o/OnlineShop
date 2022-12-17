@@ -1,11 +1,10 @@
-﻿using System.Linq.Expressions;
-using MediatR;
+﻿using MediatR;
+using OnlineShop.Domain.Customers.Queries;
 
 namespace OnlineShop.Domain.Customers.Commands
 {
-    public class GetOneCustomerCommand : IRequest<Customer>
+    public class GetOneCustomerCommand : IRequest<CustomerQuery>
     {
-        public Expression<Func<Customer, bool>> Filter { get; set; }
-        public string[] Includes { get; set; }
+        public int Id { get; set; }
     }
 }

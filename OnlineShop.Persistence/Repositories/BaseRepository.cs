@@ -115,8 +115,12 @@ namespace OnlineShop.Persistence.Repositories
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
+                var check = _table.AsQueryable();
 
-                return await _table.AsNoTracking().ToListAsync(cancellationToken);
+                if (filter is not null)
+                    check = check.Where(filter);
+
+                return await check.AsNoTracking().ToListAsync(cancellationToken);
             }
             catch (Exception ex)
             {

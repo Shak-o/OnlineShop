@@ -14,9 +14,14 @@ using OnlineShop.Domain.SalesOrderHeaders;
 using OnlineShop.Persistence;
 using OnlineShop.Persistence.Interfaces;
 using OnlineShop.Persistence.Repositories;
+using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
-
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .WriteTo.File("log.txt")
+    .CreateLogger();
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
@@ -32,6 +37,7 @@ builder.Services.AddScoped<IRepository<SalesOrderHeader>, BaseRepository<SalesOr
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomersRepository>();
 builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
+builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
 builder.Services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
 
 builder.Services.AddDbContext<ShopDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -56,6 +62,7 @@ builder.Services.AddDefaultIdentity<Account>(options =>
         options.SignIn.RequireConfirmedEmail = false;
         options.SignIn.RequireConfirmedPhoneNumber = false;
     })
+    //.AddPasswordValidator<Account>()
     .AddEntityFrameworkStores<ShopDbContext>();
 
 var app = builder.Build();

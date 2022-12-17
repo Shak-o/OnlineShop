@@ -36,5 +36,7 @@ namespace OnlineShop.Domain.Addresses.Queries
         /// Date and time the record was last updated.
         /// </summary>
         public DateTime ModifiedDate { get; set; }
+
+        public int Id { get; set; }
     }
 }

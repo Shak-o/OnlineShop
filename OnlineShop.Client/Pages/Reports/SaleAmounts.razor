@@ -1,0 +1,87 @@
+﻿@page "/Reports"
+@using OnlineShop.Persistence.Interfaces
+@using OnlineShop.Domain.Models
+@inject IReportsRepository Repository;
+
+@if (TopByMonth == null || TopProds == null || TopByYear == null)
+{
+    <h1>loading ...</h1>
+}
+else
+{
+
+
+    <h3>TopByMonth</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Month</th>
+            <th>Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in TopByMonth)
+        {
+            <tr>
+                <td>@item.Item1</td>
+                <td>@item.Item2</td>
+            </tr>
+
+        }
+        </tbody>
+
+    </table>
+
+    <h3>TopByYear</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>CustomerId</th>
+            <th>TotalCount</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in TopByYear)
+        {
+            <tr>
+                <td>@item.CustomerId</td>
+                <td>@item.TotalCount</td>
+            </tr>
+        }
+        </tbody>
+
+    </table>
+
+    <h3>TopProds</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Count</th>
+            <th>ProductId</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in TopProds)
+        {
+            <tr>
+                <td>@item.Count</td>
+                <td>@item.ProductId</td>
+            </tr>
+        }
+        </tbody>
+
+    </table>
+}
+@code {
+
+    public List<(int, decimal)> TopByMonth { get; set; }
+    public List<TopCustomers> TopByYear { get; set; }
+    public List<TopProduct> TopProds { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        TopByMonth = await Repository.GetReportByMont();
+        TopByYear = await Repository.GetTopBySalesCustomer();
+        TopProds = await Repository.GetTopBySalesProduct();
+    }
+}

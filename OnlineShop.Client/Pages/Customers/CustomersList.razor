@@ -1,0 +1,119 @@
+﻿@page "/Customer/List"
+@using MediatR
+@using OnlineShop.Domain.SalesOrderHeaders.Commands
+@using OnlineShop.Domain.SalesOrderHeaders.Queries
+@using System.Globalization
+@using OnlineShop.Domain.Customers.Commands
+@using OnlineShop.Domain.Customers.Queries
+@inject IMediator Mediator;
+@inject NavigationManager NavManager;
+
+@if (_data == null)
+{
+        <p><em>Loading...</em></p>
+}
+else
+{
+if (_errors.Count > 0)
+{
+
+    @foreach (var item in _errors)
+    {
+                    <div class="alert alert-danger" role="alert">
+            @item
+                    </div>
+    }
+
+}
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>FirstName</th>
+            <th>LastName</th>
+            <th>CompanyName</th>
+            <th>EmailAddress</th>
+            <th>Phone</th>
+            <th>NumberOfAddresses</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var customer in _data)
+        {
+                <tr>
+                    <td>@customer.Title</td>
+                    <td>@customer.FirstName</td>
+                    <td>@customer.LastName</td>
+                    <td>@customer.CompanyName</td>
+                    <td>@customer.EmailAddress</td>
+                    <td>@customer.Phone</td>
+                    <td>@customer.NumberOfAddresses.ToString()</td>
+                    <td><button type="button" class="btn btn-primary" @onclick="() => Edit(customer.Id)">Edit</button> 
+                        <button type="button" class="btn btn-danger" @onclick="() => Delete(customer.Id)">Delete</button>
+                        <button type="button" class="btn btn-secondary" @onclick="() => View(customer.Id)">View</button>
+                    </td>
+                </tr>
+        }
+        </tbody>
+    </table>
+
+    <button type="button" class="btn btn-success" @onclick="Create">Create</button>
+
+    <nav aria-label="...">
+        <ul class="pagination">
+        @if (CurrentPage < 3)
+        {
+
+        }
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">Previous</a>
+            </li>
+
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item active">
+                <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+
+}
+
+
+@code {
+    public int CurrentPage { get; set; }
+    private List<CustomerQuery>? _data;
+    private List<string> _errors = new List<string>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        CurrentPage = 29;
+        var command = new GetCustomersCommand() { Page = CurrentPage };
+        _data = await Mediator.Send(command);
+    }
+
+    public void Edit(int id)
+    {
+        NavManager.NavigateTo($"/Customer/Edit/{id}");
+    }
+
+    public void View(int id)
+    {
+        NavManager.NavigateTo($"/Customer/view/{id}");
+    }
+
+    private async Task Delete(int id)
+    {
+
+    }
+
+    public void Create()
+    {
+        NavManager.NavigateTo($"/Customer/create");
+    }
+}

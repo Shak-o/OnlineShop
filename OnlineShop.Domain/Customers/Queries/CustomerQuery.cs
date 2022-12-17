@@ -11,7 +11,7 @@ namespace OnlineShop.Domain.Customers.Queries
     public class CustomerQuery
     {
         public int Id { get; set; }
-
+        public string UserName { get; set; }
         public string AccountId { get; set; }
 
         [StringLength(8)]

@@ -24,8 +24,6 @@ namespace OnlineShop.App.CommandHandlers.Customers
             {
                 var mapped = _mapper.Map<Customer>(request);
 
-                var saltAndPass = HashHelper.CreateHashWithSalt(request.Password);
-                
                 mapped.Rowguid = Guid.NewGuid();
 
                 await _repository.AddAsync(mapped, cancellationToken);

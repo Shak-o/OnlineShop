@@ -1,0 +1,156 @@
+﻿@page "/Customer/Edit/{CustomerId}"
+@using OnlineShop.Domain.Customers.Queries
+@using OnlineShop.Domain.Customers.Commands
+@using MediatR
+@using OnlineShop.Domain.Accounts.Commands
+@using OnlineShop.Domain.Addresses.Queries
+@inject IMediator Mediator;
+
+@if (Model == null)
+{
+        <h1>Loading...</h1>
+}
+else
+{
+    <EditForm Model="Model" OnValidSubmit="@SaveCustomer">
+
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+
+        <div class="form-group">
+            <label for="Name">Title</label>
+            <InputText type="text" @bind-Value="Model.Title" class="form-control" id="Name" placeholder="Jhon"/>
+        </div>
+
+        <div class="form-group">
+            <label for="Name">Name</label>
+            <InputText type="text" @bind-Value="Model.FirstName" class="form-control" id="Name" placeholder="Jhon"/>
+        </div>
+
+        <div class="form-group">
+            <label for="Name">Middle Name</label>
+            <InputText type="text" @bind-Value="Model.MiddleName" class="form-control" id="Name" placeholder="Jhon"/>
+        </div>
+
+        <div class="form-group">
+            <label for="Name">LastName</label>
+            <InputText type="text" @bind-Value="Model.LastName" class="form-control" id="Name" placeholder="Jhon"/>
+        </div>
+
+        <div class="form-group">
+            <label for="Name">Suffix</label>
+            <InputText type="text" @bind-Value="Model.Suffix" class="form-control" id="Name" placeholder="Jhon"/>
+        </div>
+        
+        <div class="form-group">
+            <label for="Name">UserName</label>
+            <InputText type="text" @bind-Value="Model.UserName" class="form-control" id="Name" placeholder="Jhon"/>
+        </div>
+
+        <div class="form-group">
+            <label for="Name">Password</label>
+            <InputText type="password" @bind-Value="Model.Password" class="form-control" id="Name" placeholder="*****"/>
+        </div>
+
+        <div class="form-group">
+            <label for="Name">CompanyName</label>
+            <InputText type="text" @bind-Value="Model.CompanyName" class="form-control" id="Name" placeholder="Jhon"/>
+        </div>
+
+        <div class="form-group">
+            <label for="Name">SalesPerson</label>
+            <InputText type="text" @bind-Value="Model.SalesPerson" class="form-control" id="Name" placeholder="Jhon"/>
+        </div>
+
+        <div class="form-group">
+            <label for="Name">Email</label>
+            <InputText type="text" @bind-Value="Model.EmailAddress" class="form-control" id="Name" placeholder="Jhon"/>
+        </div>
+
+        <div class="form-group">
+            <label for="Name">Phone</label>
+            <InputText type="text" @bind-Value="Model.Phone" class="form-control" id="Name" placeholder="Jhon"/>
+        </div>
+        
+        <h1>Addresses:</h1>
+        @foreach (var address in Model.Addresses)
+        {
+            <div class="form-group">
+                <label for="Name">AddressLine1</label>
+                <InputText type="text" @bind-Value="address.AddressLine1" class="form-control" id="Name" placeholder="Jhon"/>
+            </div>
+
+            <div class="form-group">
+                <label for="Name">AddressLine2</label>
+                <InputText type="text" @bind-Value="address.AddressLine2" class="form-control" id="Name" placeholder="Jhon"/>
+            </div>
+
+            <div class="form-group">
+                <label for="Name">City</label>
+                <InputText type="text" @bind-Value="address.City" class="form-control" id="Name" placeholder="Jhon"/>
+            </div>
+
+            <div class="form-group">
+                <label for="Name">State/Province</label>
+                <InputText type="text" @bind-Value="address.StateProvince" class="form-control" id="Name" placeholder="Jhon"/>
+            </div>
+
+            <div class="form-group">
+                <label for="Name">CountryRegion</label>
+                <InputText type="text" @bind-Value="address.CountryRegion" class="form-control" id="Name" placeholder="Jhon"/>
+            </div>
+
+            <div class="form-group">
+                <label for="Name">PostalCode</label>
+                <InputText type="text" @bind-Value="address.PostalCode" class="form-control" id="Name" placeholder="Jhon"/>
+            </div>
+
+            
+        }
+        <button type="submit" class="btn btn-success mt-1" @onclick="AddAddress">Add Address</button>
+        <button type="submit" class="btn btn-secondary mt-1">Submit</button>
+        <button type="button" class="btn btn-secondary mt-1" >Back</button>
+        </EditForm>
+}
+
+
+@code {
+    [Parameter]
+    public string CustomerId { get; set; }
+    public CustomerQuery Model { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var command = new GetOneCustomerCommand() { Id = int.Parse(CustomerId) };
+        Model = await Mediator.Send(command);
+        Model.Password = "*******";
+    }
+
+    public async Task SaveCustomer()
+    {
+        var createAccountCommand = new CreateAccountCommand
+        {
+            NameStyle = false, 
+            FirstName = Model.FirstName, 
+            Email = Model.EmailAddress, 
+            LastName = Model.LastName, 
+            MiddleName = Model.MiddleName, 
+            Password = Model.Password, 
+            UserName = Model.UserName, 
+            Suffix = Model.Suffix, 
+            CompanyName = Model.CompanyName, 
+            SaleSperson = Model.SalesPerson, 
+            PhoneNumber = Model.Phone, 
+            Title = Model.Title
+        };
+
+        await Mediator.Send(createAccountCommand);
+    }
+
+    public void AddAddress()
+    {
+        Model.Addresses.Add(new AddressQuery());
+        StateHasChanged();
+    }
+}

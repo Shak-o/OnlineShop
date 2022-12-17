@@ -55,7 +55,7 @@ namespace OnlineShop.App.CommandHandlers.Accounts
                     NormalizedUserName = request.UserName.ToUpper(),
                     PhoneNumber = request.PhoneNumber
                 };
-
+                
                 var result = await _userManager.CreateAsync(user, request.Password);
 
                 if (!result.Succeeded) 

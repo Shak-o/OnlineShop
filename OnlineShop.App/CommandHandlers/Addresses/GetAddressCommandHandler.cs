@@ -26,8 +26,7 @@ namespace OnlineShop.App.CommandHandlers.Addresses
         {
             try
             {
-                var result = await _repository.GetByPagesAsync(request.Filter, request.Page, _options.Value.Count,
-                    cancellationToken);
+                var result = await _repository.GetWithoutTrackingAsync(request.Filter, cancellationToken);
 
                 var convert = _mapper.Map<List<Address>, List<AddressQuery>>(result);
 
