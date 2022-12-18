@@ -16,11 +16,15 @@ using OnlineShop.Persistence.Interfaces;
 using OnlineShop.Persistence.Repositories;
 using Serilog;
 using Serilog.Events;
+using Serilog.Sinks.MSSqlServer;
 
 var builder = WebApplication.CreateBuilder(args);
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
     .WriteTo.File("log.txt")
+    .WriteTo.MSSqlServer(
+        connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
+        sinkOptions: new MSSqlServerSinkOptions { TableName = "ErrorLog" }, restrictedToMinimumLevel:LogEventLevel.Warning)
     .CreateLogger();
 
 // Add services to the container.

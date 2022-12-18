@@ -132,7 +132,7 @@ else
 
     public async Task SaveCustomer()
     {
-        var createAccountCommand = new UpdateCustomerCommand()
+        var createAccountCommand = new UpdateAccountCommand()
         {
             NameStyle = false, 
             FirstName = Model.FirstName,
@@ -141,7 +141,9 @@ else
             Password = Model.Password,
             Suffix = Model.Suffix, 
             CompanyName = Model.CompanyName,
-            Title = Model.Title
+            Title = Model.Title,
+            UserName = Model.UserName,
+            Email = Model.EmailAddress
         };
 
         await Mediator.Send(createAccountCommand);
