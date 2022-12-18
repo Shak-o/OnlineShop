@@ -109,7 +109,8 @@ if (_errors.Count > 0)
 
     private async Task Delete(int id)
     {
-
+        var command = new DeleteCustomerCommand() { Id = id };
+        await Mediator.Send(command);
     }
 
     public void Create()

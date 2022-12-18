@@ -1,0 +1,52 @@
+﻿@page "/Address/Create"
+@using OnlineShop.Domain.Addresses.Queries
+
+@if (Model == null)
+{
+    <h1>Loading...</h1>
+}
+else
+{
+    <EditForm Model="Model" OnValidSubmit="@SaveAddress">
+
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="Name">Address Line 1</label>
+            <InputText type="text" @bind-Value="Model.AddressLine1" class="form-control" id="Name" placeholder="Jhon"/>
+        </div>
+        
+        <div class="form-group">
+            <label for="Name">Address Line 2</label>
+            <InputText type="text" @bind-Value="Model.AddressLine2" class="form-control" id="Name" placeholder="Jhon"/>
+        </div>
+        
+        <div class="form-group">
+            <label for="Name">City</label>
+            <InputText type="text" @bind-Value="Model.City" class="form-control" id="Name" placeholder="Jhon"/>
+        </div>
+        
+        <div class="form-group">
+            <label for="Name">Country Region</label>
+            <InputText type="text" @bind-Value="Model.CountryRegion" class="form-control" id="Name" placeholder="Jhon"/>
+        </div>
+
+        <button type="submit" class="btn btn-success mt-1">Submit</button>
+        <button type="button" class="btn btn-secondary mt-1"  >Back</button>
+    </EditForm>
+}
+
+@code {
+    public AddressQuery Model { get; set; } = new AddressQuery();
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+    public async Task SaveAddress()
+    {
+
+    }
+}

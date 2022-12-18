@@ -132,19 +132,15 @@ else
 
     public async Task SaveCustomer()
     {
-        var createAccountCommand = new CreateAccountCommand
+        var createAccountCommand = new UpdateCustomerCommand()
         {
             NameStyle = false, 
-            FirstName = Model.FirstName, 
-            Email = Model.EmailAddress, 
+            FirstName = Model.FirstName,
             LastName = Model.LastName, 
             MiddleName = Model.MiddleName, 
-            Password = Model.Password, 
-            UserName = Model.UserName, 
+            Password = Model.Password,
             Suffix = Model.Suffix, 
-            CompanyName = Model.CompanyName, 
-            SaleSperson = Model.SalesPerson, 
-            PhoneNumber = Model.Phone, 
+            CompanyName = Model.CompanyName,
             Title = Model.Title
         };
 

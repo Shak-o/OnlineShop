@@ -22,11 +22,12 @@ Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
     .WriteTo.File("log.txt")
     .CreateLogger();
+
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
-
+builder.Host.UseSerilog(); //
 builder.Services.AddMediatR(typeof(Ref).Assembly);
 
 builder.Services.AddScoped<IRepository<Customer>, BaseRepository<Customer>>();
@@ -53,7 +54,12 @@ builder.Services.AddDbContext<ShopDbContext>(options => options.UseSqlServer(bui
 
 builder.Services.AddAutoMapper(typeof(AutoMapperConfiguration));
 builder.Services.Configure<PagingOptions>(builder.Configuration.GetSection("Paging"));
-
+//
+// builder.Host.ConfigureLogging(logging =>
+// {
+//     logging.ClearProviders();
+//     logging.AddConsole();
+// });
 
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<Account>>();
 builder.Services.AddDefaultIdentity<Account>(options =>
@@ -74,6 +80,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+app.UseHttpLogging();
 
 app.UseHttpsRedirection();
 
@@ -88,3 +95,5 @@ app.MapFallbackToPage("/_Host");
 app.UseAuthentication(); ;
 
 app.Run();
+
+Log.CloseAndFlush();

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using OnlineShop.Domain.Models;
 using OnlineShop.Persistence.Interfaces;
 
@@ -7,15 +8,17 @@ namespace OnlineShop.Persistence.Repositories
     public class ReportsRepository : IReportsRepository
     {
         private readonly ShopDbContext _context;
+        private readonly ILogger<ReportsRepository> _logger;
 
-        public ReportsRepository(ShopDbContext context)
+        public ReportsRepository(ShopDbContext context, ILogger<ReportsRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<List<(int, decimal)>> GetReportByMont()
         {
-            
+            _logger.LogInformation("started");
             var secTry = _context.SalesOrderHeaders.Select(x => new { Tot = x.TotalDue, Ord = x.OrderDate.Month })
                 .GroupBy(x => x.Ord);
             var toReturn = new List<(int, decimal)>();

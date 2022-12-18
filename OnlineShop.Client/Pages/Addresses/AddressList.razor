@@ -1,0 +1,100 @@
+﻿@page "/Address/List"
+@using OnlineShop.Domain.Addresses.Queries
+@using OnlineShop.Domain.Addresses.Commands
+@using MediatR
+@inject IMediator Mediator;
+@inject NavigationManager NavManager;
+
+@if (_data == null)
+{
+    <h1>Loading...</h1>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Address Line 1</th>
+            <th>Address Line 2</th>
+            <th>City</th>
+            <th>State/Province</th>
+            <th>Country/Region</th>
+            <th>Postal Code</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var address in _data)
+        {
+                <tr>
+                    <td>@address.AddressLine1</td>
+                    <td>@address.AddressLine2</td>
+                    <td>@address.City</td>
+                    <td>@address.StateProvince</td>
+                    <td>@address.CountryRegion</td>
+                    <td>@address.PostalCode</td>
+                    <td><button type="button" class="btn btn-primary" @onclick="() => Edit(address.Id)">Edit</button> 
+                        <button type="button" class="btn btn-danger" @onclick="() => Delete(address.Id)">Delete</button>
+                        <button type="button" class="btn btn-secondary" @onclick="() => View(address.Id)">View</button>
+                    </td>
+                </tr>
+        }
+        </tbody>
+    </table>
+
+    <button type="button" class="btn btn-success" @onclick="Create">Create</button>
+
+    <nav aria-label="...">
+        <ul class="pagination">
+        @if (CurrentPage < 3)
+        {
+
+        }
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">Previous</a>
+            </li>
+
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item active">
+                <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+}
+@code {
+    public List<AddressQuery> _data { get; set; }
+    public int CurrentPage { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        CurrentPage = 0;
+        var command = new GetAddressesCommand() {Page = CurrentPage};
+        _data = await Mediator.Send(command);
+    }
+
+    public void Edit(int id)
+    {
+        NavManager.NavigateTo($"/Address/Edit/{id}");
+    }
+
+    public void View(int id)
+    {
+        NavManager.NavigateTo($"/Address/view/{id}");
+    }
+
+    private async Task Delete(int id)
+    {
+        var command = new DeleteAddressCommand() { Id = id };
+        await Mediator.Send(command);
+    }
+
+    public void Create()
+    {
+        NavManager.NavigateTo($"/Address/Create");
+    }
+
+}
