@@ -8,5 +8,6 @@ namespace OnlineShop.Client.Pages.ProductCategory
 
         [Required]
         public string ProductName { get; set; }
+        public int ProductCount { get; set; }
     }
 }

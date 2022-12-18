@@ -14,7 +14,9 @@
         <input type="text" @bind="ChosenParentCategory" class="form-control" id="ParentCategory"  placeholder="ParentCateogry" readonly>
     </div>
 </form>
-<button type="button" class="btn btn-secondary mt-1" @onclick="RedirectToHome">Back</button> 
+
+<button type="button" class="btn btn-secondary mt-1" @onclick="RedirectToList" >Back</button>
+<button type="button" class="btn btn-danger mt-1" @onclick="Delete" >Delete</button>
 @code {
     [Parameter]
     public string ProductId { get; set; }
@@ -22,6 +24,7 @@
     public string ChosenParentCategory { get; set; }
 
     public string ProductName { get; set; }
+    public int ProductCount { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -30,11 +33,22 @@
 
         if (result.ParentProductCategory is not null)
             ChosenParentCategory = result.ParentProductCategory.Name;
-
+        ProductCount = result.ProductCount;
         ProductName = result.Name;
     }
-    private void RedirectToHome()
+
+    private async Task Delete()
     {
-        NavManager.NavigateTo($"/");
+        if (ProductCount != 0)
+        {
+            return;
+        }
+
+        var command = new DeleteProductCategoryCommand() { Id = int.Parse(ProductId) };
+        await Mediator.Send(command);
+    }
+    private void RedirectToList()
+    {
+        NavManager.NavigateTo($"/ProductCategory/List");
     }
 }

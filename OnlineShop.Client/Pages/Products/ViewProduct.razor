@@ -80,7 +80,9 @@ else
                 <InputText class="form-control" @bind-Value="ChosenProductModelName" readonly/>
             </div>
 
-            <button type="button" class="btn btn-secondary mt-1" @onclick="RedirectToHome">Back</button>
+            <button type="submit" class="btn btn-success mt-1">Submit</button>
+            <button type="button" class="btn btn-secondary mt-1" @onclick="RedirectToList" >Back</button>
+            <button type="button" class="btn btn-danger mt-1" @onclick="Delete" >Delete</button>
         </EditForm>
 }
 
@@ -106,8 +108,13 @@ else
         ChosenProductModelName = ProductModels.First(x => x.Id == Model.ProductModelId).Name;
     }
 
-    private void RedirectToHome()
+    private void RedirectToList()
     {
-        NavManager.NavigateTo($"/");
+        NavManager.NavigateTo($"/Product/List");
+    }
+    public async Task Delete()
+    {
+        var command = new DeleteProductCommand() { Id = int.Parse(ProductId) };
+        await Mediator.Send(command);
     }
 }

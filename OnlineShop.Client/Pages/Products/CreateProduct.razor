@@ -94,8 +94,8 @@ else
         </div>
         <InputFile OnChange="@SetFile"/>
 
-        <button type="submit" class="btn btn-secondary mt-1">Submit</button>
-        <button type="button" class="btn btn-secondary mt-1" @onclick="RedirectToHome">Back</button>
+        <button type="submit" class="btn btn-success mt-1">Submit</button>
+        <button type="button" class="btn btn-secondary mt-1" @onclick="RedirectToList" >Back</button>
     </EditForm>
 }
 
@@ -137,8 +137,8 @@ else
 
     }
 
-    private void RedirectToHome()
+    private void RedirectToList()
     {
-        NavManager.NavigateTo($"/");
+        NavManager.NavigateTo($"/Product/List");
     }
 }

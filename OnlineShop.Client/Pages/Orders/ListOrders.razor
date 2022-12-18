@@ -108,7 +108,8 @@ else
 
     private async Task Delete(int id)
     {
-      
+        var command = new DeleteOrderCommand() { Id = id };
+        await Mediator.Send(command);
     }
 
     public void Create()

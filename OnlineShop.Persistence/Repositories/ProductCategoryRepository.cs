@@ -4,16 +4,19 @@ using OnlineShop.Domain.ProductCategories;
 using OnlineShop.Domain.ProductCategories.Queries;
 using OnlineShop.Persistence.Interfaces;
 using System.Linq.Expressions;
+using OnlineShop.Domain.Products.Queries;
 
 namespace OnlineShop.Persistence.Repositories
 {
     public class ProductCategoryRepository : BaseRepository<ProductCategory>, IProductCategoryRepository, IDisposable
     {
         private readonly ShopDbContext _context;
+        private readonly IMapper _mapper;
 
         public ProductCategoryRepository(ShopDbContext context, IMapper mapper) : base(context, mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<List<ProductCategoryListQueryResult>> GetProductCategoriesAsync(int count, int page)
@@ -37,6 +40,31 @@ namespace OnlineShop.Persistence.Repositories
                         ModifiedDate = x.ModifiedDate
                     })
                     .ToListAsync();
+
+                return toReturn;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error happened in process of reading product categories: {ex.Message}");
+            }
+        }
+        public async Task<ProductCategoryQueryResult> GetOneProductCategory(int id)
+        {
+            try
+            {
+                var toReturn = await _context.ProductCategories
+                    .AsNoTracking()
+                    .Where(x => x.Id == id)
+                    .Select(x => new ProductCategoryQueryResult
+                    {
+                        Id = x.Id,
+                        ParentProductCategoryId = x.ParentProductCategoryId,
+                        Name = x.Name,
+                        ModifiedDate = x.ModifiedDate,
+                        ParentProductCategory = _mapper.Map<ProductCategoryQueryResult>(x.ParentProductCategory),
+                        ProductCount = x.Products.Count
+                    })
+                    .FirstAsync();
 
                 return toReturn;
             }

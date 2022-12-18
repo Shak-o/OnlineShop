@@ -115,7 +115,8 @@ else
         </div>
         
         <button type="submit" class="btn btn-success mt-1">Submit</button>
-        <button type="button" class="btn btn-secondary mt-1" @onclick="RedirectToHome">Back</button>
+        <button type="button" class="btn btn-secondary mt-1" @onclick="RedirectToList" >Back</button>
+        <button type="button" class="btn btn-danger mt-1" @onclick="Delete" >Delete</button>
     </EditForm>
 }
 
@@ -143,7 +144,7 @@ else
         await Mediator.Send(command);
     }
 
-    private void RedirectToHome()
+    private void RedirectToList()
     {
         NavManager.NavigateTo($"/Orders/list");
     }
@@ -153,6 +154,13 @@ else
         Model.SalesOrderDetails.Add(new SalesOrderDetailQueryResult());
         StateHasChanged();
     }
+
+    private async Task Delete()
+    {
+        var command = new DeleteOrderCommand() { Id = int.Parse(OrderId) };
+        await Mediator.Send(command);
+    }
+
 
    
 }

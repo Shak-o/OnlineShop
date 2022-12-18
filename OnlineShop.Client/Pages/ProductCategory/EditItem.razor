@@ -22,8 +22,10 @@
             <option></option>
         </InputSelect>
     </div>
-    <button type="submit" class="btn btn-secondary mt-1">Submit</button>
-    <button type="button" class="btn btn-secondary mt-1" @onclick="RedirectToHome">Back</button> 
+    
+    <button type="submit" class="btn btn-success mt-1">Submit</button>
+    <button type="button" class="btn btn-secondary mt-1" @onclick="RedirectToList" >Back</button>
+    <button type="button" class="btn btn-danger mt-1" @onclick="Delete" >Delete</button>
 </EditForm>
 
 @code {
@@ -43,13 +45,26 @@
         if (result.ParentProductCategory is not null) 
             Model.ChosenParentCategory = result.ParentProductCategory.Name;
 
+        Model.ProductCount = result.ProductCount;
         ProductCategories = await Mediator.Send(secondCommand) ?? new List<ProductCategoryQueryResult>();
         Model.ProductName = result.Name;
     }
 
-    private void RedirectToHome()
+    private async Task Delete()
     {
-        NavManager.NavigateTo($"/");
+        if (Model.ProductCount != 0)
+        {
+            return;
+        }
+
+        var command = new DeleteProductCategoryCommand() { Id = int.Parse(ProductId) };
+        await Mediator.Send(command);
+    }
+
+
+    private void RedirectToList()
+    {
+        NavManager.NavigateTo($"/ProductCategory/List");
     }
 
     private async Task UpdateProductCategory()

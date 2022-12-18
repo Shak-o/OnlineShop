@@ -4,6 +4,7 @@
 @using OnlineShop.Domain.Accounts.Commands
 @using OnlineShop.Domain.Addresses.Queries
 @inject IMediator Mediator;
+@inject NavigationManager NavManger;
 
 @if (Model == null)
 {
@@ -102,8 +103,8 @@ else
             <button type="submit" class="btn btn-secondary mt-1" @onclick="AddAddress">Add</button>
         }
 
-        <button type="submit" class="btn btn-secondary mt-1">Submit</button>
-        <button type="button" class="btn btn-secondary mt-1" >Back</button>
+        <button type="submit" class="btn btn-success mt-1">Submit</button>
+        <button type="button" class="btn btn-secondary mt-1" @onclick="RedirectToList" >Back</button>
     </EditForm>
 }
 
@@ -140,6 +141,10 @@ else
         await Mediator.Send(createAccountCommand);
     }
 
+    public void RedirectToList()
+    {
+        NavManger.NavigateTo("/Customer/List");
+    }
     public void AddAddress()
     {
         Model.Addresses.Add(new AddressQuery());

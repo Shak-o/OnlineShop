@@ -22,8 +22,8 @@
             <option></option>
         </InputSelect>
     </div>
-    <button type="submit" class="btn btn-secondary mt-1">Submit</button>
-    <button type="button" class="btn btn-secondary mt-1" @onclick="RedirectToHome">Back</button> 
+    <button type="submit" class="btn btn-success mt-1">Submit</button>
+    <button type="button" class="btn btn-secondary mt-1" @onclick="RedirectToList" >Back</button>
 </EditForm>
 
 @code {
@@ -38,9 +38,9 @@
         ProductCategories = await Mediator.Send(secondCommand) ?? new List<ProductCategoryQueryResult>();
     }
 
-    private void RedirectToHome()
+    private void RedirectToList()
     {
-        NavManager.NavigateTo($"/");
+        NavManager.NavigateTo($"/ProductCategory/List");
     }
 
     private async Task SaveItem()

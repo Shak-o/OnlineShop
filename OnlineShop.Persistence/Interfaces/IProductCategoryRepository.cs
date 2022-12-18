@@ -7,5 +7,6 @@ namespace OnlineShop.Persistence.Interfaces
     {
         Task<List<ProductCategoryListQueryResult>> GetProductCategoriesAsync(int count, int page);
         Task DeleteProductCategoryAsync(int id, CancellationToken cancellationToken);
+        Task<ProductCategoryQueryResult> GetOneProductCategory(int id);
     }
 }

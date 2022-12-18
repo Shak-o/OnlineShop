@@ -19,5 +19,6 @@
         public DateTime ModifiedDate { get; set; }
 
         public ProductCategoryQueryResult ParentProductCategory { get; set; }
+        public int ProductCount { get; set; }
     }
 }

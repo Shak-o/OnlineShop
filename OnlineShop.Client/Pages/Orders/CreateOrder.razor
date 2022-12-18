@@ -115,7 +115,7 @@ else
         </div>
 
         <button type="submit" class="btn btn-success mt-1">Submit</button>
-        <button type="button" class="btn btn-secondary mt-1" @onclick="RedirectToHome">Back</button>
+        <button type="button" class="btn btn-secondary mt-1" @onclick="RedirectToList" >Back</button>
     </EditForm>
 }
 
@@ -140,11 +140,12 @@ else
         await Mediator.Send(command);
     }
 
-    private void RedirectToHome()
+    private void RedirectToList()
     {
         NavManager.NavigateTo($"/Orders/list");
     }
 
+ 
     private void AddSalesDetail()
     {
         Model.SalesOrderDetails.Add(new SalesOrderDetailQueryResult());
