@@ -19,14 +19,14 @@ namespace OnlineShop.Persistence.Repositories
             _mapper = mapper;
         }
 
-        public async Task<List<CustomerQuery>> GetCustomersAsync(int page, int count)
+        public async Task<(int, List<CustomerQuery>)> GetCustomersAsync(int page, int count)
         {
             try
             {
                 var max = _context.Customers.Count();
                 var maxPages = max / count;
                 var startIndex = page * count > max ? max - (max - (maxPages * count)) : page * count;
-                var takeCount = (page + 1) * count > max ?  max - maxPages * count : count;
+                var takeCount = (page + 1) * count > max ? max - maxPages * count : count;
 
                 var toReturn = await _context.Customers
                     .Include(x => x.CustomerAddresses)
@@ -48,7 +48,7 @@ namespace OnlineShop.Persistence.Repositories
                     })
                     .ToListAsync();
 
-                return toReturn;
+                return (maxPages, toReturn);
             }
             catch (Exception ex)
             {

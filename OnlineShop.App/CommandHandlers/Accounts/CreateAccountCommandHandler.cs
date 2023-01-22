@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using OnlineShop.Domain.Accounts;
 using OnlineShop.Domain.Accounts.Commands;
 using OnlineShop.Domain.Customers;
-using OnlineShop.Domain.Models;
 using OnlineShop.Persistence;
 
 namespace OnlineShop.App.CommandHandlers.Accounts
@@ -48,17 +47,17 @@ namespace OnlineShop.App.CommandHandlers.Accounts
 
                 var user = new Account()
                 {
-                    CustomerId = customer.Id, 
-                    Email = request.Email, 
+                    CustomerId = customer.Id,
+                    Email = request.Email,
                     NormalizedEmail = request.Email.ToUpper(),
                     UserName = request.UserName,
                     NormalizedUserName = request.UserName.ToUpper(),
                     PhoneNumber = request.PhoneNumber
                 };
-                
+
                 var result = await _userManager.CreateAsync(user, request.Password);
 
-                if (!result.Succeeded) 
+                if (!result.Succeeded)
                     return (false, result.Errors);
 
                 customer.AccountId = user.Id;
@@ -72,7 +71,7 @@ namespace OnlineShop.App.CommandHandlers.Accounts
             {
                 throw new Exception($"Error during account creation:{ex.Message}");
             }
-        
+
 
         }
     }

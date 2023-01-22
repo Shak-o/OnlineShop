@@ -1144,8 +1144,7 @@ namespace OnlineShop.Persistence.Migrations
                         .HasDefaultValueSql("(getdate())")
                         .HasComment("Date and time the record was last updated.");
 
-                    b.Property<bool?>("OnlineOrderFlag")
-                        .IsRequired()
+                    b.Property<bool>("OnlineOrderFlag")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValueSql("((1))")

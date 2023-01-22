@@ -24,7 +24,7 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("log.txt")
     .WriteTo.MSSqlServer(
         connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
-        sinkOptions: new MSSqlServerSinkOptions { TableName = "ErrorLog" }, restrictedToMinimumLevel:LogEventLevel.Warning)
+        sinkOptions: new MSSqlServerSinkOptions { TableName = "ErrorLog" }, restrictedToMinimumLevel: LogEventLevel.Warning)
     .CreateLogger();
 
 // Add services to the container.
@@ -45,7 +45,7 @@ builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
 builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
 builder.Services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
 
-builder.Services.AddDbContext<ShopDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContextPool<ShopDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 //
 // builder.Services.AddDefaultIdentity<Account>(options =>
 //     {

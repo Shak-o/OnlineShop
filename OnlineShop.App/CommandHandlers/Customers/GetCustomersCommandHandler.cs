@@ -2,12 +2,12 @@
 using Microsoft.Extensions.Options;
 using OnlineShop.App.Options;
 using OnlineShop.Domain.Customers.Commands;
-using OnlineShop.Domain.Customers.Queries;
+using OnlineShop.Domain.Customers.ResultModels;
 using OnlineShop.Persistence.Interfaces;
 
 namespace OnlineShop.App.CommandHandlers.Customers
 {
-    public class GetCustomersCommandHandler : IRequestHandler<GetCustomersCommand, List<CustomerQuery>>
+    public class GetCustomersCommandHandler : IRequestHandler<GetCustomersCommand, GetCustomersResult>
     {
         private readonly ICustomerRepository _repository;
         private readonly IOptions<PagingOptions> _options;
@@ -18,12 +18,13 @@ namespace OnlineShop.App.CommandHandlers.Customers
             _options = options;
         }
 
-        public async Task<List<CustomerQuery>> Handle(GetCustomersCommand request, CancellationToken cancellationToken)
+        public async Task<GetCustomersResult> Handle(GetCustomersCommand request, CancellationToken cancellationToken)
         {
             try
             {
                 var result = await _repository.GetCustomersAsync(request.Page, _options.Value.Count);
-                return result;
+                var toReturn = new GetCustomersResult() { Customers = result.Item2, MaxPages = result.Item1 };
+                return toReturn;
             }
             catch (Exception ex)
             {

@@ -127,8 +127,8 @@ else
     protected override async Task OnInitializedAsync()
     {
         Model = new OrderQueryResult() {OrderDate = DateTime.Now, DueDate = DateTime.Now};
-
-        Customers = await Mediator.Send(new GetCustomersCommand() { Page = 0 });
+        var customersGetResult = await Mediator.Send(new GetCustomersCommand() { Page = 0 });
+        Customers = customersGetResult.Customers;
         //Customers.Add(Model.Customer);
         Products = await Mediator.Send(new GetProductListCommand() { Page = 0 });
         //Products.AddRange(Model.SalesOrderDetails.Select(x => new ProductQueryResult() { Id = x.ProductId }));
